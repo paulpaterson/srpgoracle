@@ -1,4 +1,6 @@
-import {getGreeting} from "./common";
+import {getGreeting, randomElement, randomNumber, getSuccess} from "./common";
+
+
 
 document.addEventListener("DOMContentLoaded", () => {
     const userName = "Bobby";
@@ -9,7 +11,8 @@ document.addEventListener("DOMContentLoaded", () => {
         messageElement.textContent = getGreeting(userName);
     }
     if (messageElement2) {
-        messageElement2.textContent = getGreeting('Footer');
+        messageElement2.textContent = getGreeting(`number ${randomNumber(10)}`);
     }
+    getSuccess();
 })
 

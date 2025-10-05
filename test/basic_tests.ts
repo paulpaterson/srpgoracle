@@ -1,4 +1,4 @@
-import {randomNumber} from "../src/common";
+import {randomElement, randomNumber} from "../src/common";
 
 describe('A simple test', () => {
     test('one', () => {
@@ -22,5 +22,22 @@ describe('Random number tests', () => {
         for (let idx = 1; idx <= 10; idx++) {
             expect(seen).toContain(idx);
         }
+    })
+})
+
+describe('Random element tests', () => {
+    test('Should be from array', () => {
+        let seen: Set<string> = new Set<string>();
+        let items = ['one', 'two', 'three', 'four', 'five'];
+
+        // Collect some data
+        for (let idx = 0; idx < 1000; idx++) {
+            let answer = randomElement(items);
+            seen.add(answer);
+            expect(items).toContain(answer);
+        }
+
+        // Check all members seen
+        expect(seen.size).toEqual(items.length);
     })
 })
