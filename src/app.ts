@@ -1,20 +1,14 @@
-    // app.ts
-    function greet(name: string): string {
-        return `Hello, ${name}!`;
-    }
+function getGreeting(name: string): string {
+    return `Hello, ${name}! Welcome to the app.`;
+}
 
-    let userName: string = "TypeScript Learner";
-    console.log(greet(userName));
+const userName = "Bobby";
+const messageElement = document.getElementById("message");
+const messageElement2 = document.getElementById("footer");
 
-    // Example with an interface
-    interface Person {
-        firstName: string;
-        lastName: string;
-    }
-
-    function sayHello(person: Person): string {
-        return `Greetings, ${person.firstName} ${person.lastName}!`;
-    }
-
-    let user: Person = { firstName: "Jane", lastName: "Doe" };
-    console.log(sayHello(user));
+if (messageElement) {
+    messageElement.textContent = getGreeting(userName);
+}
+if (messageElement2) {
+    messageElement2.textContent = getGreeting('Footer');
+}
