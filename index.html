@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>TypeScript App</title>
     <script src="dist/app.js"></script>
+    <script src="dist/ui.js"></script>
 </head>
 <body>
     <h1>My HTML App with TypeScript</h1>
@@ -11,8 +12,12 @@
     <p id="footer"></p>
 
     <p>Do I succeed?</p>
-    <button onclick="getSuccess()">Press</button>
+    <button onclick="getSuccess('success', 'success_options')">Press</button>
     <p id="success">?</p>
+
+    <p>What kind of person are they?</p>
+    <button onclick="getSuccess('person', 'person_options')">Press</button>
+    <p id="person">?</p>
 
     <!-- Link to the compiled JavaScript file -->
 

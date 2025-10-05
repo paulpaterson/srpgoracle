@@ -14,17 +14,3 @@ export function randomElement(list: Array<string>): string {
     return list[idx - 1];
 }
 
-
-export function getSuccess() {
-    const success = document.getElementById("success");
-    if (success) {
-        success.textContent = randomElement([
-            'Yes, in excess of expectations',
-            'Yes',
-            'Yes, but with complications',
-            'Almost but not quite',
-            'No',
-            'It goes horribly wrong',
-        ])
-    }
-}
