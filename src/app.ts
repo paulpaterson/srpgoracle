@@ -1,4 +1,5 @@
 import {getGreeting, randomElement, randomNumber} from "./common";
+import {showChoices} from "./ui";
 
 
 
@@ -13,5 +14,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (messageElement2) {
         messageElement2.textContent = getGreeting(`number ${randomNumber(10)}`);
     }
+
+    showChoices('choices', 'one');
+    showChoices('choices', 'two');
 })
 

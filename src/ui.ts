@@ -1,5 +1,7 @@
 import {randomElement, randomNumber} from "./common";
 
+export let types = ["Succeed", "Person", "Disposition"];
+
 export function getSuccess(element_name: string, type_name: string) {
     const success = document.getElementById(element_name);
     let options = {
@@ -46,5 +48,32 @@ export async function repeatedlyCall(min_times: number, max_times: number, eleme
         console.log(`Calling function for iteration ${idx+1}`);
         getSuccess(element_name, type_name);
         await sleep(100);
+    }
+}
+
+export function showChoices(element_name: string, id: string) {
+    let element = document.getElementById(element_name);
+    if (element) {
+        let select = document.createElement('select');
+        select.setAttribute('id', id);
+        element.appendChild(select);
+        for (let option of types) {
+            let opt = document.createElement('option')
+            opt.textContent = option;
+            opt.value = option;
+            select.appendChild(opt);
+        }
+        let button = document.createElement('button')
+        button.textContent = 'Get';
+        button.addEventListener('click', handleClick)
+        element.appendChild(button);
+
+        let result = document.createElement('div');
+        result.textContent = '?';
+        element.appendChild(result);
+
+        function handleClick(event: MouseEvent): void {
+          result.textContent = `You clicked me with selection ${select.value}`;
+        }
     }
 }
