@@ -23,6 +23,22 @@ describe('Random number tests', () => {
             expect(seen).toContain(idx);
         }
     })
+    test('Can have lower number and max', () => {
+        let seen: Set<number> = new Set<number>();
+
+        // Collect some data
+        for (let idx = 0; idx < 1000; idx++) {
+            let answer = randomNumber(10, 5);
+            seen.add(answer);
+            expect(answer).toBeGreaterThanOrEqual(5);
+            expect(answer).toBeLessThanOrEqual(10);
+        }
+
+        // Check all members seen
+        for (let idx = 5; idx <= 10; idx++) {
+            expect(seen).toContain(idx);
+        }
+    })
 })
 
 describe('Random element tests', () => {

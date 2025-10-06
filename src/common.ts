@@ -4,8 +4,8 @@ export function getGreeting(name: string): string {
 }
 
 // Return a random number between 1 and the max
-export function randomNumber(max: number): number {
-    return Math.floor(1 + Math.random() * max);
+export function randomNumber(max: number, min: number = 1): number {
+    return Math.floor(min + Math.random() * (max - min + 1));
 }
 
 // Return a random element from a list

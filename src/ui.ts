@@ -35,3 +35,7 @@ export function getSuccess(element_name: string, type_name: string) {
         success.textContent = result;
     }
 }
+
+export function repeatedlyCall(min_times: number, max_times: number) {
+
+}
