@@ -141,20 +141,20 @@ ALL_CHOICES.addChoice(new Choice(
 
 ALL_CHOICES.addChoice(new Choice(
     "Complication", [
-        O("An opportunity", ["concrete"]),
         O("A Person", ["concrete"]),
         O("A thing", ["concrete"]),
+        O("An opportunity", ["concept"]),
         O("An emotion", ["concept"]),
         O("An event", ["concept"]),
         O("A disaster", ["concept"]),
 ]));
 
 
-export function getSuccess(element: HTMLElement, type_name: string, modifier: string) {
+export function getSuccess(element: HTMLSelectElement, type_name: string, modifier: string) {
     let result: string;
     result = randomElement(ALL_CHOICES.getChoiceNamed(type_name).getChoices(modifier));
     if (element) {
-        element.textContent = result;
+        element.value = result;
     }
 }
 
@@ -162,7 +162,7 @@ function sleep(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-export async function repeatedlyCall(min_times: number, max_times: number, element: HTMLElement, type_name: string, modifier: string) {
+export async function repeatedlyCall(min_times: number, max_times: number, element: HTMLSelectElement, type_name: string, modifier: string) {
     let times = randomNumber(max_times, min_times);
     for (let idx = 0; idx < times; idx++) {
         console.log(`Calling function for iteration ${idx+1}`);
@@ -173,9 +173,12 @@ export async function repeatedlyCall(min_times: number, max_times: number, eleme
     }
 }
 
-export function showChoices(element_name: string, id: string, type_name?: string) {
-    let element = document.getElementById(element_name);
-    if (element) {
+export function showChoices(element_name: string, id: string, type_name: string) {
+    let parent_element = document.getElementById(element_name);
+    if (parent_element) {
+
+        let element = document.createElement('div');
+        parent_element.appendChild(element);
 
         // The select option
         let select = document.createElement('select');
@@ -191,29 +194,58 @@ export function showChoices(element_name: string, id: string, type_name?: string
             select.appendChild(opt);
         }
 
+        // Things that modify the options
         let modifiers = document.createElement('select');
         element.appendChild(modifiers);
-        if (type_name) {
-            // The modifiers
-            for (let mod of ALL_CHOICES.getChoiceNamed(type_name).getModifiers()) {
-                let opt = document.createElement('option')
-                opt.textContent = mod;
-                opt.value = mod;
-                modifiers.appendChild(opt);
-            }
+
+        // The modifiers
+        for (let mod of ALL_CHOICES.getChoiceNamed(type_name).getModifiers()) {
+            let opt = document.createElement('option')
+            opt.textContent = mod;
+            opt.value = mod;
+            modifiers.appendChild(opt);
         }
+        modifiers.addEventListener("click", handleModifierSelect);
 
         let button = document.createElement('button')
         button.textContent = 'Get';
         button.addEventListener('click', handleClick)
         element.appendChild(button);
 
-        let result = document.createElement('div');
-        result.textContent = '?';
+        // The result options
+        let result = document.createElement('select');
         element.appendChild(result);
+        let choices = ALL_CHOICES.getChoiceNamed(type_name);
+        for (let opt of choices.getChoices('All')) {
+            let option = document.createElement('option');
+            option.textContent = opt;
+            result.appendChild(option);
+        }
 
         function handleClick(event: MouseEvent): void {
           repeatedlyCall(10, 20, result, select.value, modifiers.value);
+        }
+
+        function handleModifierSelect(event: MouseEvent): void {
+            let select_value_is_disabled = false;
+            let first_valid;
+            for (let opt of result.options) {
+                opt.disabled = !(choices.getChoices(modifiers.value).includes(opt.value))
+                if (opt.value == result.value && opt.disabled) {
+                    select_value_is_disabled = true;
+                }
+                if (!opt.disabled && !first_valid) {
+                    first_valid = opt;
+                }
+            }
+            // Check if we need to fill in a value
+            if (select_value_is_disabled) {
+                if (first_valid) {
+                    result.value = first_valid.value;
+                } else {
+                    result.value = '';
+                }
+            }
         }
     }
 }
