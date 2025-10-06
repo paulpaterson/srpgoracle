@@ -1,4 +1,4 @@
-import {randomElement} from "./common";
+import {randomElement, randomNumber} from "./common";
 
 export function getSuccess(element_name: string, type_name: string) {
     const success = document.getElementById(element_name);
@@ -36,6 +36,15 @@ export function getSuccess(element_name: string, type_name: string) {
     }
 }
 
-export function repeatedlyCall(min_times: number, max_times: number) {
+function sleep(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
+export async function repeatedlyCall(min_times: number, max_times: number, element_name: string, type_name: string) {
+    let times = randomNumber(max_times, min_times);
+    for (let idx = 0; idx < times; idx++) {
+        console.log(`Calling function for iteration ${idx+1}`);
+        getSuccess(element_name, type_name);
+        await sleep(100);
+    }
 }
