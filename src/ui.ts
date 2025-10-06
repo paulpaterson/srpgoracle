@@ -178,25 +178,27 @@ export function showChoices(element_name: string, id: string, type_name: string)
     if (parent_element) {
 
         let element = document.createElement('div');
+        element.className = 'card';
         parent_element.appendChild(element);
 
         // The select option
-        let select = document.createElement('select');
-        select.setAttribute('id', id);
-        element.appendChild(select);
-        for (let option of ALL_CHOICES.getTypesOfChoice()) {
-            let opt = document.createElement('option')
-            opt.textContent = option;
-            opt.value = option;
-            if (type_name && type_name == option) {
-                opt.setAttribute('selected', "true");
-            }
-            select.appendChild(opt);
-        }
+        let name = document.createElement('div');
+        name.className = "card-header";
+        name.textContent = type_name;
+        element.appendChild(name);
+
+        let card = document.createElement('div');
+        card.className = "card-body";
+        element.appendChild(card);
+
+        let group = document.createElement('div');
+        group.className = "input-group";
+        card.appendChild(group);
 
         // Things that modify the options
         let modifiers = document.createElement('select');
-        element.appendChild(modifiers);
+        modifiers.className = "form-select";
+        group.appendChild(modifiers);
 
         // The modifiers
         for (let mod of ALL_CHOICES.getChoiceNamed(type_name).getModifiers()) {
@@ -209,12 +211,15 @@ export function showChoices(element_name: string, id: string, type_name: string)
 
         let button = document.createElement('button')
         button.textContent = 'Get';
-        button.addEventListener('click', handleClick)
-        element.appendChild(button);
+        button.addEventListener('click', handleClick);
+        button.type = "submit";
+        button.className = "btn btn-primary";
+        group.appendChild(button);
 
         // The result options
         let result = document.createElement('select');
-        element.appendChild(result);
+        result.className = "form-select";
+        group.appendChild(result);
         let choices = ALL_CHOICES.getChoiceNamed(type_name);
         for (let opt of choices.getChoices('All')) {
             let option = document.createElement('option');
@@ -223,7 +228,7 @@ export function showChoices(element_name: string, id: string, type_name: string)
         }
 
         function handleClick(event: MouseEvent): void {
-          repeatedlyCall(10, 20, result, select.value, modifiers.value);
+          repeatedlyCall(10, 20, result, type_name, modifiers.value);
         }
 
         function handleModifierSelect(event: MouseEvent): void {
