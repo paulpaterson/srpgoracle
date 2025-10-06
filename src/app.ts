@@ -17,5 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     showChoices('choices', 'one');
     showChoices('choices', 'two');
+    showChoices('choices', 'three');
+    showChoices('choices', 'four');
 })
 
