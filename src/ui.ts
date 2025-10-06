@@ -1,31 +1,72 @@
 import {randomElement, randomNumber} from "./common";
 
-export let types: Record<string, string[]> = {
-    "Succeed": [
+class Choice {
+    name: string;
+    options: string[];
+
+    constructor(name: string, options: string[]) {
+        this.name = name;
+        this.options = options;
+    }
+
+    getChoices(): string[] {
+        return this.options;
+    }
+}
+
+class Choices {
+    options: Record<string, Choice>;
+    constructor() {
+        this.options = {};
+    }
+
+    addChoice(choice: Choice) {
+        this.options[choice.name] = choice;
+    }
+
+    getChoiceNamed(name: string): Choice {
+        return this.options[name];
+    }
+
+    getTypesOfChoice(): string[] {
+        return Object.keys(this.options);
+    }
+}
+
+let ALL_CHOICES = new Choices();
+
+ALL_CHOICES.addChoice(new Choice(
+    "Succeed", [
         'Yes, and then some',
         'Yes',
         'Yes, with complications',
         'Almost but not quite',
         'No',
         'No and it gets even worse',
-    ],
-    "Person": [
+]));
+
+ALL_CHOICES.addChoice(new Choice(
+    "Person", [
         'Younger man',
         'Younger woman',
         'Man',
         'Woman',
         'Older man',
         'Older woman',
-    ],
-    "Disposition": [
+]));
+
+ALL_CHOICES.addChoice(new Choice(
+    "Disposition", [
         'Friendly',
         'Open',
         'Neutral',
         'Wary',
         'Suspicious',
         'Angry',
-    ],
-    "Character": [
+]));
+
+ALL_CHOICES.addChoice(new Choice(
+    "Character", [
         'Extraverted',
         'Introverted',
         'Sensing',
@@ -34,35 +75,43 @@ export let types: Record<string, string[]> = {
         'Feeling',
         'Judging',
         'Perceiving',
-    ],
-    "Sex": [
+]));
+
+ALL_CHOICES.addChoice(new Choice(
+    "Sex", [
         "Male",
         "Female",
-    ],
-    "True or not": [
+]));
+
+ALL_CHOICES.addChoice(new Choice(
+    "True or not", [
         "Yes",
         "No",
-    ],
-    "How many": [
+]));
+
+ALL_CHOICES.addChoice(new Choice(
+    "How many", [
         "None",
         "One",
         "A few",
         "More than a few",
         "Lots",
-    ],
-    "Complication": [
+]));
+
+ALL_CHOICES.addChoice(new Choice(
+    "Complication", [
         "An opportunity",
         "A Person",
         "A thing",
         "An emotion",
         "An event",
         "A disaster",
-    ],
-}
+]));
+
 
 export function getSuccess(element: HTMLElement, type_name: string) {
     let result: string;
-    result = randomElement(types[type_name]);
+    result = randomElement(ALL_CHOICES.getChoiceNamed(type_name).getChoices());
     if (element) {
         element.textContent = result;
     }
@@ -89,7 +138,7 @@ export function showChoices(element_name: string, id: string) {
         let select = document.createElement('select');
         select.setAttribute('id', id);
         element.appendChild(select);
-        for (let option of Object.keys(types)) {
+        for (let option of ALL_CHOICES.getTypesOfChoice()) {
             let opt = document.createElement('option')
             opt.textContent = option;
             opt.value = option;
