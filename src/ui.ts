@@ -227,13 +227,29 @@ export function showChoices(element_name: string, id: string, type_name: string)
         element.appendChild(card);
 
         let group = document.createElement('div');
-        group.className = "input-group";
+        group.className = "input-group align-items-center";
         card.appendChild(group);
+
+        let button = document.createElement('button')
+        button.textContent = 'Get';
+        button.addEventListener('click', handleClick);
+        button.type = "submit";
+        button.className = "btn btn-primary";
+
+
+        group.appendChild(button);
 
         // Things that modify the options
         let modifiers = document.createElement('select');
         modifiers.className = "form-select";
-        group.appendChild(modifiers);
+        let modifier_id = `modifier-${type_name}`;
+        modifiers.setAttribute('id', modifier_id);
+
+        let mod_label = document.createElement('label');
+        mod_label.textContent = 'With modifier';
+        mod_label.setAttribute('for', modifier_id);
+        mod_label.className = "px-3";
+        group.appendChild(mod_label);
 
         // The modifiers
         for (let mod of ALL_CHOICES.getChoiceNamed(type_name).getModifiers()) {
@@ -243,17 +259,19 @@ export function showChoices(element_name: string, id: string, type_name: string)
             modifiers.appendChild(opt);
         }
         modifiers.addEventListener("click", handleModifierSelect);
-
-        let button = document.createElement('button')
-        button.textContent = 'Get';
-        button.addEventListener('click', handleClick);
-        button.type = "submit";
-        button.className = "btn btn-primary";
-        group.appendChild(button);
+        group.appendChild(modifiers);
 
         // The result options
+        let result_id = `result-${type_name}`;
+        let result_label = document.createElement('label');
+        result_label.textContent = 'Answer is';
+        result_label.setAttribute('for', modifier_id);
+        result_label.className = "px-3";
+        group.appendChild(result_label);
+
         let result = document.createElement('select');
-        result.className = "form-select";
+        result.className = "form-select w-50";
+        result.setAttribute('id', result_id);
         group.appendChild(result);
         let choices = ALL_CHOICES.getChoiceNamed(type_name);
         for (let opt of choices.getChoices('All')) {
