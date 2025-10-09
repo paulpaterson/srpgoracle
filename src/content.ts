@@ -4,7 +4,7 @@ import {Choice, Choices, O} from "./choices";
 export let ALL_CHOICES = new Choices();
 
 ALL_CHOICES.addChoice(new Choice(
-    "Succeed", [
+    "Succeed", "Will I succeed at it / my plan / etc?", [
         O('Yes, and then some', ['easy']),
         O('Yes', ['easy']),
         O('Yes, with complications', ['easy', 'hard']),
@@ -14,7 +14,7 @@ ALL_CHOICES.addChoice(new Choice(
 ]));
 
 ALL_CHOICES.addChoice(new Choice(
-    "Person", [
+    "Person", "What kind of person is it?", [
         O('Younger man', ['man']),
         O('Younger woman', ['woman']),
         O('Man', ['man']),
@@ -28,7 +28,7 @@ ALL_CHOICES.addChoice(new Choice(
 ]));
 
 ALL_CHOICES.addChoice(new Choice(
-    "Disposition", [
+    "Disposition", "How are they disposed towards me?", [
         O('Friendly', ['Mostly positive']),
         O('Open', ['Mostly positive']),
         O('Neutral', ['Mostly positive', 'Mostly negative']),
@@ -38,7 +38,7 @@ ALL_CHOICES.addChoice(new Choice(
 ]));
 
 ALL_CHOICES.addChoice(new Choice(
-    "Character", [
+    "Character", "What is their character like?", [
         O('Extraverted'),
         O('Introverted'),
         O('Sensing'),
@@ -50,19 +50,19 @@ ALL_CHOICES.addChoice(new Choice(
 ]));
 
 ALL_CHOICES.addChoice(new Choice(
-    "Sex", [
+    "Sex", "What sex are they?", [
         O("Male"),
         O("Female"),
 ]));
 
 ALL_CHOICES.addChoice(new Choice(
-    "True or not", [
+    "True or not", "Is it true or is it correct or does it happen?", [
         O("Yes"),
         O("No"),
 ]));
 
 ALL_CHOICES.addChoice(new Choice(
-    "How many", [
+    "How many", "How many of them are there?", [
         O("None", ["up to a few"]),
         O("One", ["up to a few", "at least some"]),
         O("A few", ["up to a few", "at least some"]),
@@ -71,8 +71,9 @@ ALL_CHOICES.addChoice(new Choice(
 ]));
 
 ALL_CHOICES.addChoice(new Choice(
-    "Complication", [
-        O("A Person", ["concrete"]),
+    "Complication", "What is the nature of the complication that happens?", [
+        O("A person", ["concrete"]),
+        O("An animal", ["concrete"]),
         O("A thing", ["concrete"]),
         O("An opportunity", ["concept"]),
         O("An emotion", ["concept"]),
@@ -81,7 +82,7 @@ ALL_CHOICES.addChoice(new Choice(
 ]));
 
 ALL_CHOICES.addChoice(new Choice(
-    "Humor", [
+    "Humor", "What kind of humor is it?", [
         O("Physical", []),
         O("Slapstick", []),
         O("Edge/Offensive", []),
@@ -95,7 +96,7 @@ ALL_CHOICES.addChoice(new Choice(
 ]));
 
 ALL_CHOICES.addChoice(new Choice(
-    "Quests", [
+    "Quests", "What kind of quest is it?", [
         O("Heist or infiltration", []),
         O("Break a siege", []),
         O("Scout or spy mission", ['non-fantasy']),

@@ -1,5 +1,6 @@
 import {randomElement, randomNumber} from "./common";
 import {ALL_CHOICES} from "./content";
+export { ALL_CHOICES};
 
 
 export function getSuccess(element: HTMLSelectElement, type_name: string, modifier: string) {
@@ -30,13 +31,13 @@ export function showChoices(element_name: string, id: string, type_name: string)
     if (parent_element) {
 
         let element = document.createElement('div');
-        element.className = 'card';
+        element.className = 'card pb-5';
         parent_element.appendChild(element);
 
         // The select option
-        let name = document.createElement('div');
+        let name = document.createElement('h4');
         name.className = "card-header";
-        name.textContent = type_name;
+        name.textContent = ALL_CHOICES.getChoiceNamed(type_name).description;
         element.appendChild(name);
 
         let card = document.createElement('div');
@@ -48,7 +49,7 @@ export function showChoices(element_name: string, id: string, type_name: string)
         card.appendChild(group);
 
         let button = document.createElement('button')
-        button.textContent = 'Get';
+        button.textContent = 'Ask ...';
         button.addEventListener('click', handleClick);
         button.type = "submit";
         button.className = "btn btn-primary";
