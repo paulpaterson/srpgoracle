@@ -20,12 +20,14 @@ export class Option {
 export class Choice {
     name: string;
     description: string;
+    icon: string;
     options: Option[];
 
-    constructor(name: string, description: string, options: Option[]) {
+    constructor(name: string, description: string, icon: string="award", options: Option[]) {
         this.name = name;
         this.description = description;
         this.options = options;
+        this.icon = icon;
     }
 
     getChoices(modifier: string): string[] {

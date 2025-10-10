@@ -29,6 +29,7 @@ export async function repeatedlyCall(min_times: number, max_times: number, eleme
 export function showChoices(element_name: string, id: string, type_name: string) {
     let parent_element = document.getElementById(element_name);
     if (parent_element) {
+        let QUESTION = ALL_CHOICES.getChoiceNamed(type_name);
 
         let element = document.createElement('div');
         element.className = 'card pb-5';
@@ -37,8 +38,14 @@ export function showChoices(element_name: string, id: string, type_name: string)
         // The select option
         let name = document.createElement('h4');
         name.className = "card-header";
-        name.textContent = ALL_CHOICES.getChoiceNamed(type_name).description;
         element.appendChild(name);
+        let icon = document.createElement('i');
+
+        icon.className = `bi bi-${QUESTION.icon} px-3`;
+        name.appendChild(icon);
+        let main_label = document.createElement('label');
+        main_label.textContent = QUESTION.description;
+        name.appendChild(main_label);
 
         let card = document.createElement('div');
         card.className = "card-body";
