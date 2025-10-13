@@ -11,18 +11,41 @@ export function getSuccess(element: HTMLSelectElement, type_name: string, modifi
     }
 }
 
+export function chooseNext(element: HTMLSelectElement): void {
+    let current_idx = element.selectedIndex;
+    while (true) {
+        current_idx += 1;
+
+        // Reached the end?
+        if (current_idx >= element.options.length) {
+            current_idx = -1;
+            continue
+        }
+
+        // Fell on a disabled option?
+        if (element.options[current_idx].disabled) {
+            continue;
+        }
+
+        element.selectedIndex = current_idx;
+        return
+    }
+}
+
 function sleep(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 export async function repeatedlyCall(min_times: number, max_times: number, element: HTMLSelectElement, type_name: string, modifier: string) {
     let times = randomNumber(max_times, min_times);
+    let time_step = 10;
     for (let idx = 0; idx < times; idx++) {
         console.log(`Calling function for iteration ${idx+1}`);
         if (element) {
-            getSuccess(element, type_name, modifier);
+            chooseNext(element);
         }
-        await sleep(100);
+        await sleep(time_step);
+        time_step += 10;
     }
 }
 
@@ -106,7 +129,7 @@ export function showChoices(element_name: string, id: string, type_name: string)
         }
 
         function handleClick(event: MouseEvent): void {
-          repeatedlyCall(10, 20, result, type_name, modifiers.value);
+          repeatedlyCall(20, 30, result, type_name, modifiers.value);
         }
 
         function handleModifierSelect(event: MouseEvent): void {
