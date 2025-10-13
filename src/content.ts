@@ -1,4 +1,4 @@
-import {Choice, Choices, O} from "./choices";
+import {Choice, ChoiceGroup, Choices, O} from "./choices";
 
 
 export let ALL_CHOICES = new Choices();
@@ -50,7 +50,7 @@ ALL_CHOICES.addChoice(new Choice("Sex", "What sex are they?", 'person-standing-d
     O("Female"),
 ]));
 
-ALL_CHOICES.addChoice(new Choice("True or not", "Is it true or is it correct or does it happen?", 'check', [
+ALL_CHOICES.addChoice(new Choice("Yes or No", "Simple Yes / No Question?", 'check', [
     O("Yes"),
     O("No"),
 ]));
@@ -101,3 +101,16 @@ ALL_CHOICES.addChoice(new Choice("Quests", "What kind of quest is it?", 'journal
     O("Deal with injustice or fight polical corruption", ['non-fantasy']),
     O("Enchanted journey", []),
 ]));
+
+
+export let GROUPS = new ChoiceGroup();
+GROUPS.groups['Person'] = [
+    ALL_CHOICES.getChoiceNamed('Person'),
+    ALL_CHOICES.getChoiceNamed('Disposition'),
+    ALL_CHOICES.getChoiceNamed('Character'),
+];
+
+GROUPS.groups['Crowd'] = [
+    ALL_CHOICES.getChoiceNamed('How many'),
+    ALL_CHOICES.getChoiceNamed('Disposition'),
+]

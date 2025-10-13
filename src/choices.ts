@@ -72,6 +72,21 @@ export class Choices {
     }
 }
 
+export class ChoiceGroup {
+    groups: Record<string, Choice[]>;
+
+    constructor() {
+        this.groups = {};
+    }
+
+    getGroupNames(): string[] {
+        return Object.keys(this.groups);
+    }
+
+    getGroupNamed(name: string): Choice[] {
+        return this.groups[name];
+    }
+}
 
 export function O(name: string, valid_in?: string[]): Option {
     return new Option(name, valid_in);
