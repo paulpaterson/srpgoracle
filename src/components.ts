@@ -30,6 +30,11 @@ interface ButtonProps extends ElementProps{
     on_click?: (event: MouseEvent) => void;
 }
 
+interface OptionsProps extends ElementProps {
+    text_content: string;
+    value?: string;
+}
+
 export class Div {
     element: HTMLElement;
 
@@ -43,7 +48,7 @@ export class Div {
         this.element.style = style;
     }
 
-    appendTo(element: HTMLElement|Div): this {
+    appendTo(element: HTMLElement|Div) {
         if (element instanceof Div) {
             element.element.appendChild(this.element);
         } else {
@@ -79,6 +84,23 @@ export class Heading extends Div {
     finaliseObject({classes = '', style = '', text_content= ''}: HeadingProps) {
         super.finaliseObject({classes: classes, style: style});
         this.element.textContent = text_content;
+    }
+}
+
+export class Option extends Div {
+    element: HTMLOptionElement;
+    constructor(options: OptionsProps) {
+        super(options);
+        this.element = document.createElement(`option`);
+        this.finaliseObject(options);
+    }
+
+    finaliseObject({classes = '', style = '', text_content= '', value=''}: OptionsProps) {
+        super.finaliseObject({classes: classes, style: style});
+        this.element.textContent = text_content;
+        if (value != '') {
+            this.element.value = value;
+        }
     }
 }
 

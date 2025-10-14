@@ -1,7 +1,7 @@
 import {randomElement, randomNumber} from "./common";
 import {ALL_CHOICES, GROUPS} from "./content";
 import {Choice, ChoiceGroup} from "./choices";
-import {Button, Div, Heading, Icon, Label} from "./components";
+import {Button, Div, Heading, Icon, Label, Option} from "./components";
 export { ALL_CHOICES};
 
 
@@ -80,10 +80,7 @@ function addChoiceBody(group: HTMLElement, type_name: string) {
 
     // The modifiers
     for (let mod of ALL_CHOICES.getChoiceNamed(type_name).getModifiers()) {
-        let opt = document.createElement('option')
-        opt.textContent = mod;
-        opt.value = mod;
-        modifiers.appendChild(opt);
+        let opt = new Option({text_content: mod, value: mod}).appendTo(modifiers);
     }
     modifiers.addEventListener("click", handleModifierSelect);
     group.appendChild(modifiers);
@@ -98,9 +95,7 @@ function addChoiceBody(group: HTMLElement, type_name: string) {
     group.appendChild(result);
     let choices = ALL_CHOICES.getChoiceNamed(type_name);
     for (let opt of choices.getChoices('All')) {
-        let option = document.createElement('option');
-        option.textContent = opt;
-        result.appendChild(option);
+        let option = new Option({text_content: opt}).appendTo(result);
     }
 
     function handleClick(event: MouseEvent): void {
