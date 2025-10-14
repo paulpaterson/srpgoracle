@@ -1,6 +1,7 @@
 import {randomElement, randomNumber} from "./common";
 import {ALL_CHOICES, GROUPS} from "./content";
 import {Choice, ChoiceGroup} from "./choices";
+import {Button} from "./components";
 export { ALL_CHOICES};
 
 
@@ -79,16 +80,9 @@ export function showChoices(element_name: string, id: string, type_name: string)
         group.className = "input-group align-items-center";
         card.appendChild(group);
 
-        let button = document.createElement('button')
-        button.textContent = 'Ask ...';
-        button.type = "submit";
-        button.className = "btn btn-primary";
+        let button = Button({text: 'Ask ...'});
         group.appendChild(button);
-
-
-        let handleClick = addChoiceBody(group, type_name);
-
-        button.addEventListener('click', handleClick);
+        button.addEventListener('click', addChoiceBody(group, type_name));
     }
 }
 
@@ -204,12 +198,8 @@ export function showGroup(element_name: string, id: string, item: string): void 
             click_handers.push(handleClick);
         }
 
-        let button = document.createElement('button')
-        button.textContent = 'Ask ...';
-        button.type = "submit";
-        button.className = "btn btn-primary";
-        button.addEventListener('click', handleAllClicks);
-        name.appendChild(button);
+
+        name.appendChild(Button({text:'Ask ...', on_click: handleAllClicks}));
 
         // Call all the handlers of all the choices
         function handleAllClicks(event: MouseEvent): void {
