@@ -1,7 +1,7 @@
 import {randomElement, randomNumber} from "./common";
 import {ALL_CHOICES, GROUPS} from "./content";
 import {Choice, ChoiceGroup} from "./choices";
-import {Button, Div} from "./components";
+import {Button, Div, Heading, Icon} from "./components";
 export { ALL_CHOICES};
 
 
@@ -62,10 +62,9 @@ export function showChoices(element_name: string, id: string, type_name: string)
         let name = document.createElement('h4');
         name.className = "card-header";
         element.appendChild(name);
-        let icon = document.createElement('i');
 
-        icon.className = `bi bi-${QUESTION.icon} px-3`;
-        name.appendChild(icon);
+        let icon = new Icon({icon_name: QUESTION.icon, classes: 'px-3'}).appendTo(name);
+
         let main_label = document.createElement('label');
         main_label.textContent = QUESTION.description;
         name.appendChild(main_label);
@@ -159,26 +158,15 @@ export function showGroup(element_name: string, id: string, item: string): void 
         let element = new Div({classes: 'card pb-5'}).appendTo(parent_element);
 
         // The select option
-        let name = document.createElement('h4');
-        name.className = "card-header";
-        name.textContent = item + '   ';
-        element.appendChild(name);
+        let name = new Heading({level: 4, classes: 'card-header', text_content: item + '   '}).appendTo(element);
 
         let card = new Div({classes: "card-body"}).appendTo(element);
-
 
         // The individual items
         for (let choice of group) {
             let group = new Div({classes: "input-group align-items-center py-1"}).appendTo(card);
-
-            let icon = document.createElement('i');
-            icon.className = `bi bi-${choice.icon} px-3`;
-            group.appendChild(icon);
-
-            let choice_label = document.createElement('h4');
-            choice_label.textContent = choice.name;
-            choice_label.style = 'width: 150px';
-            group.appendChild(choice_label);
+            let icon = new Icon({icon_name: choice.icon, classes: 'px-3'}).appendTo(group);
+            new Heading({level: 4, text_content: choice.name, style: 'width: 150px'}).appendTo(group);
 
             let handleClick = addChoiceBody(group.element, choice.name);
             click_handers.push(handleClick);

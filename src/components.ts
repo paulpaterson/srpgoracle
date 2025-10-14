@@ -5,6 +5,16 @@ Some standard components
 
 interface ElementProps {
     classes?: string;
+    style?: string;
+}
+
+interface IconProps extends ElementProps {
+    icon_name: string;
+}
+
+interface HeadingProps extends ElementProps {
+    level?: number;
+    text_content: string;
 }
 
 interface ButtonProps extends ElementProps{
@@ -16,9 +26,14 @@ interface ButtonProps extends ElementProps{
 export class Div {
     element: HTMLElement;
 
-    constructor({classes=''}: ElementProps) {
+    constructor(options: ElementProps) {
         this.element = document.createElement('div');
+        this.finaliseObject(options);
+    }
+
+    finaliseObject({classes='', style=''}: ElementProps) {
         this.element.className = classes;
+        this.element.style = style;
     }
 
     appendTo(element: HTMLElement|Div): this {
@@ -35,13 +50,42 @@ export class Div {
     }
 }
 
+export class Icon extends Div {
+    constructor(options: IconProps) {
+        super(options);
+    }
+    finaliseObject({classes = '', style = '', icon_name = ''}: IconProps) {
+        super.finaliseObject({classes: '', style: ''});
+        this.element = document.createElement('i');
+        this.element.className = `bi bi-${icon_name} ${classes}`;
+    }
+}
+
+export class Heading extends Div {
+    element: HTMLHeadingElement;
+    constructor(options: HeadingProps) {
+        super(options);
+        this.element = document.createElement(`h${options.level}`) as HTMLHeadingElement;
+        this.finaliseObject(options);
+    }
+
+    finaliseObject({classes = '', style = '', text_content= ''}: HeadingProps) {
+        super.finaliseObject({classes: classes, style: style});
+        this.element.textContent = text_content;
+    }
+}
 
 export class Button extends Div {
     element: HTMLButtonElement;
 
-    constructor({text, button_type='submit', classes='', on_click=undefined}: ButtonProps) {
-        super({classes: classes});
+    constructor(options: ButtonProps) {
+        super(options);
         this.element = document.createElement('button')
+        this.finaliseObject(options);
+    }
+
+    finaliseObject({classes = '', style = '', text = '', button_type = 'submit', on_click = undefined}: ButtonProps) {
+        super.finaliseObject({classes: '', style: ''});
         this.element.textContent = text;
         this.element.type = button_type;
         this.element.className = `btn btn-primary ${classes}`;
