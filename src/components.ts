@@ -8,6 +8,10 @@ interface ElementProps {
     style?: string;
 }
 
+interface SelectProps extends ElementProps {
+
+}
+
 interface IconProps extends ElementProps {
     icon_name: string;
 }
@@ -62,9 +66,19 @@ export class Div {
     }
 }
 
+export class Select extends Div {
+    element: HTMLSelectElement;
+    constructor(options: SelectProps) {
+        super(options);
+        this.element = document.createElement('select');
+        this.finaliseObject(options);
+    }
+}
+
 export class Icon extends Div {
     constructor(options: IconProps) {
         super(options);
+        this.finaliseObject(options);
     }
     finaliseObject({classes = '', style = '', icon_name = ''}: IconProps) {
         super.finaliseObject({classes: '', style: ''});

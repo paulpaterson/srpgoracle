@@ -1,7 +1,7 @@
 import {randomElement, randomNumber} from "./common";
 import {ALL_CHOICES, GROUPS} from "./content";
 import {Choice, ChoiceGroup} from "./choices";
-import {Button, Div, Heading, Icon, Label, Option} from "./components";
+import {Button, Div, Heading, Icon, Label, Option, Select} from "./components";
 export { ALL_CHOICES};
 
 
@@ -71,8 +71,7 @@ export function showChoices(element_name: string, id: string, type_name: string)
 
 function addChoiceBody(group: HTMLElement, type_name: string) {
     // Things that modify the options
-    let modifiers = document.createElement('select');
-    modifiers.className = "form-select";
+    let modifiers = new Select({classes: 'form-select'}).element;
     let modifier_id = `modifier-${type_name}`;
     modifiers.setAttribute('id', modifier_id);
 
@@ -89,10 +88,9 @@ function addChoiceBody(group: HTMLElement, type_name: string) {
     let result_id = `result-${type_name}`;
     let result_label = new Label({text_content: 'Answer is', for_id: modifier_id, classes: 'px-3'}).appendTo(group);
 
-    let result = document.createElement('select');
-    result.className = "form-select w-50";
+    let result = new Select({classes: 'form-select w-50'}).appendTo(group).element;
     result.setAttribute('id', result_id);
-    group.appendChild(result);
+
     let choices = ALL_CHOICES.getChoiceNamed(type_name);
     for (let opt of choices.getChoices('All')) {
         let option = new Option({text_content: opt}).appendTo(result);
