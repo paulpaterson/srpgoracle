@@ -1,7 +1,7 @@
 import {randomElement, randomNumber} from "./common";
 import {ALL_CHOICES, GROUPS} from "./content";
 import {Choice, ChoiceGroup} from "./choices";
-import {Button} from "./components";
+import {Button, Div} from "./components";
 export { ALL_CHOICES};
 
 
@@ -56,9 +56,7 @@ export function showChoices(element_name: string, id: string, type_name: string)
     if (parent_element) {
         let QUESTION = ALL_CHOICES.getChoiceNamed(type_name);
 
-        let element = document.createElement('div');
-        element.className = 'card pb-5';
-        parent_element.appendChild(element);
+        let element = new Div({classes: 'card pb-5'}).appendTo(parent_element);
 
         // The select option
         let name = document.createElement('h4');
@@ -72,17 +70,10 @@ export function showChoices(element_name: string, id: string, type_name: string)
         main_label.textContent = QUESTION.description;
         name.appendChild(main_label);
 
-        let card = document.createElement('div');
-        card.className = "card-body";
-        element.appendChild(card);
-
-        let group = document.createElement('div');
-        group.className = "input-group align-items-center";
-        card.appendChild(group);
-
-        let button = Button({text: 'Ask ...'});
-        group.appendChild(button);
-        button.addEventListener('click', addChoiceBody(group, type_name));
+        let card = new Div({classes: 'card-body'}).appendTo(element);
+        let group = new Div({classes: "input-group align-items-center"}).appendTo(card);
+        let button = new Button({text: 'Ask ...'}).appendTo(group);
+        button.element.addEventListener('click', addChoiceBody(group.element, type_name));
     }
 }
 
@@ -165,9 +156,7 @@ export function showGroup(element_name: string, id: string, item: string): void 
     let click_handers = new Array<click_handler>();
     if (parent_element) {
         // The main header for the group
-        let element = document.createElement('div');
-        element.className = 'card pb-5';
-        parent_element.appendChild(element);
+        let element = new Div({classes: 'card pb-5'}).appendTo(parent_element);
 
         // The select option
         let name = document.createElement('h4');
@@ -175,15 +164,12 @@ export function showGroup(element_name: string, id: string, item: string): void 
         name.textContent = item + '   ';
         element.appendChild(name);
 
-        let card = document.createElement('div');
-        card.className = "card-body";
-        element.appendChild(card);
+        let card = new Div({classes: "card-body"}).appendTo(element);
+
 
         // The individual items
         for (let choice of group) {
-            let group = document.createElement('div');
-            group.className = "input-group align-items-center py-1";
-            card.appendChild(group);
+            let group = new Div({classes: "input-group align-items-center py-1"}).appendTo(card);
 
             let icon = document.createElement('i');
             icon.className = `bi bi-${choice.icon} px-3`;
@@ -194,12 +180,12 @@ export function showGroup(element_name: string, id: string, item: string): void 
             choice_label.style = 'width: 150px';
             group.appendChild(choice_label);
 
-            let handleClick = addChoiceBody(group, choice.name);
+            let handleClick = addChoiceBody(group.element, choice.name);
             click_handers.push(handleClick);
         }
 
 
-        name.appendChild(Button({text:'Ask ...', on_click: handleAllClicks}));
+        new Button({text:'Ask ...', on_click: handleAllClicks}).appendTo(name);
 
         // Call all the handlers of all the choices
         function handleAllClicks(event: MouseEvent): void {
