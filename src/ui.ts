@@ -1,7 +1,7 @@
 import {randomElement, randomNumber} from "./common";
 import {ALL_CHOICES, GROUPS} from "./content";
 import {Choice, ChoiceGroup} from "./choices";
-import {Button, Div, Heading, Icon} from "./components";
+import {Button, Div, Heading, Icon, Label} from "./components";
 export { ALL_CHOICES};
 
 
@@ -59,16 +59,9 @@ export function showChoices(element_name: string, id: string, type_name: string)
         let element = new Div({classes: 'card pb-5'}).appendTo(parent_element);
 
         // The select option
-        let name = document.createElement('h4');
-        name.className = "card-header";
-        element.appendChild(name);
-
+        let name = new Heading({level: 4, classes: 'card-header', text_content: ''}).appendTo(element);
         let icon = new Icon({icon_name: QUESTION.icon, classes: 'px-3'}).appendTo(name);
-
-        let main_label = document.createElement('label');
-        main_label.textContent = QUESTION.description;
-        name.appendChild(main_label);
-
+        let main_label = new Label({text_content: QUESTION.description}).appendTo(name);
         let card = new Div({classes: 'card-body'}).appendTo(element);
         let group = new Div({classes: "input-group align-items-center"}).appendTo(card);
         let button = new Button({text: 'Ask ...'}).appendTo(group);
@@ -83,11 +76,7 @@ function addChoiceBody(group: HTMLElement, type_name: string) {
     let modifier_id = `modifier-${type_name}`;
     modifiers.setAttribute('id', modifier_id);
 
-    let mod_label = document.createElement('label');
-    mod_label.textContent = 'With modifier';
-    mod_label.setAttribute('for', modifier_id);
-    mod_label.className = "px-3";
-    group.appendChild(mod_label);
+    let mod_label = new Label({text_content: 'With modifier', for_id: modifier_id, classes: 'px-3'}).appendTo(group);
 
     // The modifiers
     for (let mod of ALL_CHOICES.getChoiceNamed(type_name).getModifiers()) {
@@ -101,11 +90,7 @@ function addChoiceBody(group: HTMLElement, type_name: string) {
 
     // The result options
     let result_id = `result-${type_name}`;
-    let result_label = document.createElement('label');
-    result_label.textContent = 'Answer is';
-    result_label.setAttribute('for', modifier_id);
-    result_label.className = "px-3";
-    group.appendChild(result_label);
+    let result_label = new Label({text_content: 'Answer is', for_id: modifier_id, classes: 'px-3'}).appendTo(group);
 
     let result = document.createElement('select');
     result.className = "form-select w-50";

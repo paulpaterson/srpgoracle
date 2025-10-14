@@ -12,9 +12,16 @@ interface IconProps extends ElementProps {
     icon_name: string;
 }
 
-interface HeadingProps extends ElementProps {
-    level?: number;
+interface LabelProps extends ElementProps {
     text_content: string;
+    for_id?: string;
+}
+
+
+interface HeadingProps extends ElementProps {
+    text_content: string;
+    level?: number;
+
 }
 
 interface ButtonProps extends ElementProps{
@@ -74,6 +81,24 @@ export class Heading extends Div {
         this.element.textContent = text_content;
     }
 }
+
+export class Label extends Div {
+    element: HTMLLabelElement;
+
+    constructor(options: LabelProps) {
+        super(options);
+        this.element = document.createElement(`label`);
+        this.finaliseObject(options);
+    }
+
+    finaliseObject({classes = '', style = '', text_content= '', for_id=''}: LabelProps) {
+        super.finaliseObject({classes: classes, style: style});
+        this.element.textContent = text_content;
+        this.element.setAttribute('for', for_id);
+    }
+
+}
+
 
 export class Button extends Div {
     element: HTMLButtonElement;
