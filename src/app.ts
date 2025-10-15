@@ -6,11 +6,15 @@ import {GROUPS} from "./content";
 
 document.addEventListener("DOMContentLoaded", () => {
 
-    for (let opt of ALL_CHOICES.getTypesOfChoice()) {
-        showChoices('choices', 'one', opt);
-    }
-    for (let item of GROUPS.getGroupNames()) {
-        showGroup('groups', 'two', item);
+    if (document.URL.endsWith('composite.html')) {
+
+    } else {
+        for (let opt of ALL_CHOICES.getTypesOfChoice()) {
+            showChoices('choices', 'one', opt);
+        }
+        for (let item of GROUPS.getGroupNames()) {
+            showGroup('groups', 'two', item);
+        }
     }
 })
 
