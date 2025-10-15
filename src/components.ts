@@ -39,7 +39,9 @@ interface OptionsProps extends ElementProps {
     value?: string;
 }
 
-
+interface InputProps extends ElementProps {
+    value: string;
+}
 
 export class Div {
     element: HTMLElement;
@@ -80,12 +82,25 @@ export class Select extends Div {
 export class Icon extends Div {
     constructor(options: IconProps) {
         super(options);
+        this.element = document.createElement('i');
         this.finaliseObject(options);
     }
     finaliseObject({classes = '', style = '', icon_name = ''}: IconProps) {
         super.finaliseObject({classes: '', style: ''});
-        this.element = document.createElement('i');
         this.element.className = `bi bi-${icon_name} ${classes}`;
+    }
+}
+
+export class Input extends Div {
+    element: HTMLInputElement;
+    constructor(options: InputProps) {
+        super(options);
+        this.element = document.createElement('input');
+        this.finaliseObject(options);
+    }
+    finaliseObject({classes = '', style = '', value}: InputProps) {
+        super.finaliseObject({classes: classes, style: style});
+        this.element.value = value;
     }
 }
 

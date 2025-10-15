@@ -1,3 +1,4 @@
+import {randomNumber} from "./common";
 
 export class Option {
     name: string;
@@ -90,4 +91,35 @@ export class ChoiceGroup {
 
 export function O(name: string, valid_in?: string[]): Option {
     return new Option(name, valid_in);
+}
+
+
+export class Stat {
+    name: string;
+    value: number;
+    icon: string;
+
+    constructor(name: string, value: number, icon: string) {
+        this.name = name;
+        this.value = value;
+        this.icon = icon;
+    }
+
+    rerollStats() {
+        this.value = randomNumber(10, 1);
+    }
+}
+
+export class Stats {
+    stats: Stat[] = [];
+
+    add(stat: Stat) {
+        this.stats.push(stat);
+    }
+
+    rerollStats() {
+        for (let stat of this.stats) {
+            stat.rerollStats();
+        }
+    }
 }

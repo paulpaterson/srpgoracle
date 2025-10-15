@@ -1,7 +1,7 @@
 import {randomElement, randomNumber} from "./common";
-import {ALL_CHOICES, GROUPS} from "./content";
+import {ALL_CHOICES, GROUPS, STATS} from "./content";
 import {Choice, ChoiceGroup} from "./choices";
-import {Button, Div, Heading, Icon, Label, Option, Select} from "./components";
+import {Button, Div, Heading, Icon, Label, Option, Select, Input} from "./components";
 export { ALL_CHOICES};
 
 
@@ -160,4 +160,38 @@ export function showGroup(element_name: string, id: string, item: string): void 
             }
         }
     }
+}
+
+export function showStats(element_name: string) {
+    let root = document.getElementById(element_name);
+    let values: Record<string, HTMLInputElement> = {};
+
+    if (root) {
+        let card_header = new Heading({level: 4, classes: 'card-header', text_content: 'Stats     '}).appendTo(root);
+        let reroll = new Button({button_type: 'submit', text: 'Reroll'}).appendTo(card_header);
+        let card_body = new Div({classes: 'card-body container'}).appendTo(root);
+
+        for (let the_stat of STATS.stats) {
+            let group = new Div({classes: "input-group align-items-center row py-1"}).appendTo(card_body);
+            let col1 = new Div({classes: 'col-2'}).appendTo(group);
+            let col2 = new Div({classes: 'col-2'}).appendTo(group);
+            let label = new Label({text_content: the_stat.name, classes: 'px-3', for_id: the_stat.name});
+            let input = new Input({value: the_stat.value.toString(), classes: 'form-control'});
+            input.element.setAttribute('id', the_stat.name);
+            col1.appendChild(label.element);
+            col2.appendChild(input.element);
+            //
+            values[the_stat.name] = input.element;
+        }
+        //
+        reroll.element.addEventListener('click', () => updateStats());
+    }
+
+    function updateStats() {
+        STATS.rerollStats();
+        for (let the_stat of STATS.stats) {
+            values[the_stat.name].value = the_stat.value.toString();
+        }
+    }
+
 }

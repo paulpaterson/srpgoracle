@@ -1,4 +1,4 @@
-import {Choice, ChoiceGroup, Choices, O} from "./choices";
+import {Choice, ChoiceGroup, Choices, O, Stats, Stat} from "./choices";
 
 
 export let ALL_CHOICES = new Choices();
@@ -114,3 +114,10 @@ GROUPS.groups['Crowd'] = [
     ALL_CHOICES.getChoiceNamed('How many'),
     ALL_CHOICES.getChoiceNamed('Disposition'),
 ]
+
+export let STATS = new Stats();
+STATS.add(new Stat('Charisma', 0, 'emoji-smile'));
+STATS.add(new Stat('Strength', 0, 'person-arms-up'));
+STATS.add(new Stat('Intelligence', 0, 'cpu'));
+STATS.add(new Stat('Constitution', 0, 'fork-knife'));
+
