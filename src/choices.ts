@@ -1,4 +1,5 @@
 import {randomElement, randomNumber} from "./common";
+import {DEFAULT_STAT} from "./content";
 
 export class Option {
     name: string;
@@ -124,7 +125,7 @@ export class Stats {
 
     clearAll() {
         for (let stat of this.stats) {
-            stat.value = 0;
+            stat.value = DEFAULT_STAT;
         }
     }
 

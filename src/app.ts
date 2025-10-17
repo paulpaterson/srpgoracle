@@ -1,5 +1,5 @@
 import {getGreeting, randomElement, randomNumber} from "./common";
-import {ALL_CHOICES, showChoices, showGroup, showStats} from "./ui";
+import {ALL_CHOICES, showChoices, showGroup, showSkillCheckedChoice, showStats} from "./ui";
 import {COMPOSITE_SUCCESS, GROUPS} from "./content";
 
 

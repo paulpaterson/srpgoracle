@@ -115,11 +115,14 @@ GROUPS.groups['Crowd'] = [
     ALL_CHOICES.getChoiceNamed('Disposition'),
 ]
 
+
+export const DEFAULT_STAT = 4;
+
 export let STATS = new Stats();
-STATS.add(new Stat('Charisma', 0, 'emoji-smile'));
-STATS.add(new Stat('Strength', 0, 'person-arms-up'));
-STATS.add(new Stat('Intelligence', 0, 'cpu'));
-STATS.add(new Stat('Constitution', 0, 'fork-knife'));
+STATS.add(new Stat('Charisma', DEFAULT_STAT, 'emoji-smile'));
+STATS.add(new Stat('Strength', DEFAULT_STAT, 'person-arms-up'));
+STATS.add(new Stat('Intelligence', DEFAULT_STAT, 'cpu'));
+STATS.add(new Stat('Constitution', DEFAULT_STAT, 'fork-knife'));
 
 export let COMPOSITE_SUCCESS = new Choice(
     'Success', 'Does the action or plan succeed?', 'award', [
