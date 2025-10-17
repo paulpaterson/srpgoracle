@@ -71,6 +71,7 @@ export function showSkillCheckedChoice(element_name: string, id: string, choice:
         let button = new Button({text: 'Try', on_click: rollForSuccess}).appendTo(group);
         new Label({text_content: 'Skill', for_id: choice.name,classes: 'px-3'}).appendTo(group);
         let skills = new Select({classes: 'form-select', id: choice.name}).appendTo(group);
+        new Option({text_content: 'None', value: 'None'}).appendTo(skills);
         for (let skill of STATS.stats) {
             new Option({text_content: skill.name, value: skill.name}).appendTo(skills);
         }
@@ -84,6 +85,7 @@ export function showSkillCheckedChoice(element_name: string, id: string, choice:
             readStats();
             let the_skill = STATS.getStatNamed(skills.element.value);
             if (the_skill) {
+                // A skill was selected
                 choice_body.modifier.value = 'All';
                 let dice_value = 0;
                 for (let roll = 0; roll <= 20; roll++) {
@@ -124,6 +126,9 @@ export function showSkillCheckedChoice(element_name: string, id: string, choice:
                 result.element.textContent += ` ... ${result_text} ... sets modifier to ${modifier}`;
                 choice_body.modifier.value = modifier;
                 choice_body.modifier_select(event);
+                choice_body.handle_click(event);
+            } else {
+                // No skill selected so just use the default
                 choice_body.handle_click(event);
             }
         }
