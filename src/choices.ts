@@ -1,4 +1,4 @@
-import {randomNumber} from "./common";
+import {randomElement, randomNumber} from "./common";
 
 export class Option {
     name: string;
@@ -117,9 +117,14 @@ export class Stats {
         this.stats.push(stat);
     }
 
-    rerollStats() {
+    addRandomStat() {
+        let stat = randomElement(this.stats);
+        stat.value += 1;
+    }
+
+    clearAll() {
         for (let stat of this.stats) {
-            stat.rerollStats();
+            stat.value = 0;
         }
     }
 }

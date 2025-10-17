@@ -9,7 +9,7 @@ export function randomNumber(max: number, min: number = 1): number {
 }
 
 // Return a random element from a list
-export function randomElement(list: Array<string>): string {
+export function randomElement<T>(list: Array<T>): T {
     let idx = randomNumber(list.length);
     return list[idx - 1];
 }

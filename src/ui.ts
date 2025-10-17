@@ -164,8 +164,10 @@ export function showStats(element_name: string) {
     let values: Record<string, HTMLInputElement> = {};
 
     if (root) {
-        let card_header = new Heading({level: 4, classes: 'card-header', text_content: 'Stats     '}).appendTo(root);
+        let card_header = new Heading({level: 4, classes: 'card-header align-items-center', text_content: 'Stats     '}).appendTo(root);
         let reroll = new Button({button_type: 'submit', text: 'Reroll'}).appendTo(card_header);
+        new Label({text_content: 'with points', for_id: 'points', classes: 'px-3'}).appendTo(card_header);
+        let points = new Input({value: '6', classes: 'col-1'}).appendTo(card_header);
         let card_body = new Div({classes: 'card-body container'}).appendTo(root);
 
         for (let the_stat of STATS.stats) {
@@ -180,11 +182,22 @@ export function showStats(element_name: string) {
             values[the_stat.name] = input.element;
         }
         //
-        reroll.element.addEventListener('click', () => updateStats());
+        reroll.element.addEventListener('click', () => rerollStats(points.element));
+    }
+
+    async function rerollStats(points: HTMLInputElement) {
+        let total_points = Number(points.value);
+        if (!isNaN(total_points)) {
+            STATS.clearAll();
+            for (let i=0; i <= total_points; i++) {
+                updateStats();
+                await sleep(500);
+                STATS.addRandomStat();
+            }
+        }
     }
 
     function updateStats() {
-        STATS.rerollStats();
         for (let the_stat of STATS.stats) {
             values[the_stat.name].value = the_stat.value.toString();
         }
