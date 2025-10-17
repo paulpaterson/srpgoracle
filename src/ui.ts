@@ -1,17 +1,10 @@
-import {randomElement, randomNumber} from "./common";
+import {randomNumber} from "./common";
 import {ALL_CHOICES, GROUPS, STATS} from "./content";
-import {Choice, ChoiceGroup} from "./choices";
+import {Choice} from "./choices";
 import {Button, Div, Heading, Icon, Label, Option, Select, Input} from "./components";
 export { ALL_CHOICES};
 
 
-export function getSuccess(element: HTMLSelectElement, type_name: string, modifier: string) {
-    let result: string;
-    result = randomElement(ALL_CHOICES.getChoiceNamed(type_name).getChoices(modifier));
-    if (element) {
-        element.value = result;
-    }
-}
 
 export function chooseNext(element: HTMLSelectElement): void {
     let current_idx = element.selectedIndex;
@@ -38,7 +31,7 @@ function sleep(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-export async function repeatedlyCall(min_times: number, max_times: number, element: HTMLSelectElement, type_name: string, modifier: string) {
+export async function repeatedlyCall(min_times: number, max_times: number, element: HTMLSelectElement) {
     let times = randomNumber(max_times, min_times);
     let time_step = 10;
     for (let idx = 0; idx < times; idx++) {
@@ -170,7 +163,7 @@ function addChoiceBody(group: HTMLElement, choice: Choice): ChoiceBody {
     }
 
     function handleClick(event: MouseEvent): void {
-      repeatedlyCall(20, 30, result, type_name, modifiers.value);
+      repeatedlyCall(20, 30, result);
     }
 
     function handleModifierSelect(event: MouseEvent): void {
