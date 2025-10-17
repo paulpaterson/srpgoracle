@@ -6,6 +6,7 @@ Some standard components
 interface ElementProps {
     classes?: string;
     style?: string;
+    id?: string;
 }
 
 interface SelectProps extends ElementProps {
@@ -51,9 +52,12 @@ export class Div {
         this.finaliseObject(options);
     }
 
-    finaliseObject({classes='', style=''}: ElementProps) {
+    finaliseObject({classes='', style='', id=''}: ElementProps) {
         this.element.className = classes;
         this.element.style = style;
+        if (id != '') {
+            this.element.setAttribute('id', id);
+        }
     }
 
     appendTo(element: HTMLElement|Div) {
@@ -85,9 +89,9 @@ export class Icon extends Div {
         this.element = document.createElement('i');
         this.finaliseObject(options);
     }
-    finaliseObject({classes = '', style = '', icon_name = ''}: IconProps) {
-        super.finaliseObject({classes: '', style: ''});
-        this.element.className = `bi bi-${icon_name} ${classes}`;
+    finaliseObject(options: IconProps) {
+        super.finaliseObject(options);
+        this.element.className = `bi bi-${options.icon_name} ${options.classes}`;
     }
 }
 
@@ -98,9 +102,9 @@ export class Input extends Div {
         this.element = document.createElement('input');
         this.finaliseObject(options);
     }
-    finaliseObject({classes = '', style = '', value}: InputProps) {
-        super.finaliseObject({classes: classes, style: style});
-        this.element.value = value;
+    finaliseObject(options: InputProps) {
+        super.finaliseObject(options);
+        this.element.value = options.value;
     }
 }
 
@@ -112,9 +116,9 @@ export class Heading extends Div {
         this.finaliseObject(options);
     }
 
-    finaliseObject({classes = '', style = '', text_content= ''}: HeadingProps) {
-        super.finaliseObject({classes: classes, style: style});
-        this.element.textContent = text_content;
+    finaliseObject(options: HeadingProps) {
+        super.finaliseObject(options);
+        this.element.textContent = options.text_content;
     }
 }
 
@@ -126,11 +130,11 @@ export class Option extends Div {
         this.finaliseObject(options);
     }
 
-    finaliseObject({classes = '', style = '', text_content= '', value=''}: OptionsProps) {
-        super.finaliseObject({classes: classes, style: style});
-        this.element.textContent = text_content;
-        if (value != '') {
-            this.element.value = value;
+    finaliseObject(options: OptionsProps) {
+        super.finaliseObject(options);
+        this.element.textContent = options.text_content;
+        if (options.value != undefined) {
+            this.element.value = options.value;
         }
     }
 }
@@ -144,10 +148,12 @@ export class Label extends Div {
         this.finaliseObject(options);
     }
 
-    finaliseObject({classes = '', style = '', text_content= '', for_id=''}: LabelProps) {
-        super.finaliseObject({classes: classes, style: style});
-        this.element.textContent = text_content;
-        this.element.setAttribute('for', for_id);
+    finaliseObject(options: LabelProps) {
+        super.finaliseObject({classes: options.classes, style: options.style});
+        this.element.textContent = options.text_content;
+        if (options.for_id != undefined) {
+            this.element.setAttribute('for', options.for_id);
+        }
     }
 
 }
@@ -162,13 +168,13 @@ export class Button extends Div {
         this.finaliseObject(options);
     }
 
-    finaliseObject({classes = '', style = '', text = '', button_type = 'submit', on_click = undefined}: ButtonProps) {
-        super.finaliseObject({classes: '', style: ''});
-        this.element.textContent = text;
-        this.element.type = button_type;
-        this.element.className = `btn btn-primary ${classes}`;
-        if (on_click) {
-            this.element.addEventListener('click', on_click);
+    finaliseObject(options: ButtonProps) {
+        super.finaliseObject(options);
+        this.element.textContent = options.text;
+        this.element.type = options.button_type ?? 'submit';
+        this.element.className = `btn btn-primary ${options.classes}`;
+        if (options.on_click) {
+            this.element.addEventListener('click', options.on_click);
         }
     }
 }

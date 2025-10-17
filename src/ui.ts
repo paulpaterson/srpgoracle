@@ -71,9 +71,8 @@ function addChoiceBody(group: HTMLElement, choice: Choice) {
     let type_name = choice.name;
 
     // Things that modify the options
-    let modifiers = new Select({classes: 'form-select'}).element;
     let modifier_id = `modifier-${type_name}`;
-    modifiers.setAttribute('id', modifier_id);
+    let modifiers = new Select({classes: 'form-select', id: modifier_id}).element;
 
     let mod_label = new Label({text_content: 'With modifier', for_id: modifier_id, classes: 'px-3'}).appendTo(group);
 
@@ -88,8 +87,7 @@ function addChoiceBody(group: HTMLElement, choice: Choice) {
     let result_id = `result-${type_name}`;
     let result_label = new Label({text_content: 'Answer is', for_id: modifier_id, classes: 'px-3'}).appendTo(group);
 
-    let result = new Select({classes: 'form-select w-50'}).appendTo(group).element;
-    result.setAttribute('id', result_id);
+    let result = new Select({classes: 'form-select w-50', id: result_id}).appendTo(group).element;
 
     for (let opt of choice.getChoices('All')) {
         let option = new Option({text_content: opt}).appendTo(result);
@@ -175,8 +173,7 @@ export function showStats(element_name: string) {
             let col1 = new Div({classes: 'col-2'}).appendTo(group);
             let col2 = new Div({classes: 'col-2'}).appendTo(group);
             let label = new Label({text_content: the_stat.name, classes: 'px-3', for_id: the_stat.name});
-            let input = new Input({value: the_stat.value.toString(), classes: 'form-control'});
-            input.element.setAttribute('id', the_stat.name);
+            let input = new Input({value: the_stat.value.toString(), classes: 'form-control', id: the_stat.name});
             col1.appendChild(label.element);
             col2.appendChild(input.element);
             //
