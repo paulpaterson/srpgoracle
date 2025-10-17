@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (document.URL.endsWith('composite.html')) {
         showStats('stats');
-        showChoices('choices', 'one', COMPOSITE_SUCCESS);
+        showSkillCheckedChoice('choices', 'one', COMPOSITE_SUCCESS);
     } else {
         for (let opt of ALL_CHOICES.getTypesOfChoice()) {
             showChoices('choices', 'one', ALL_CHOICES.getChoiceNamed(opt));

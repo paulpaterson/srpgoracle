@@ -51,23 +51,99 @@ export async function repeatedlyCall(min_times: number, max_times: number, eleme
     }
 }
 
-export function showChoices(element_name: string, id: string, choice: Choice) {
-    let parent_element = document.getElementById(element_name);
-    if (parent_element) {
+function showChoiceHeader(parent_element: HTMLElement, id: string, choice: Choice) {
         let element = new Div({classes: 'card pb-5'}).appendTo(parent_element);
-
-        // The select option
         let name = new Heading({level: 4, classes: 'card-header', text_content: ''}).appendTo(element);
         let icon = new Icon({icon_name: choice.icon, classes: 'px-3'}).appendTo(name);
         let main_label = new Label({text_content: choice.description}).appendTo(name);
         let card = new Div({classes: 'card-body'}).appendTo(element);
-        let group = new Div({classes: "input-group align-items-center"}).appendTo(card);
+        return new Div({classes: "input-group align-items-center"}).appendTo(card);
+}
+
+export function showChoices(element_name: string, id: string, choice: Choice) {
+    let parent_element = document.getElementById(element_name);
+    if (parent_element) {
+        let group = showChoiceHeader(parent_element, id, choice);
+        // The select option
         let button = new Button({text: 'Ask ...'}).appendTo(group);
-        button.element.addEventListener('click', addChoiceBody(group.element, choice));
+        button.element.addEventListener('click', addChoiceBody(group.element, choice).handle_click);
     }
 }
 
-function addChoiceBody(group: HTMLElement, choice: Choice) {
+export function showSkillCheckedChoice(element_name: string, id: string, choice: Choice) {
+    let parent_element = document.getElementById(element_name);
+    if (parent_element) {
+        let group = showChoiceHeader(parent_element, id, choice);
+        let button = new Button({text: 'Try', on_click: rollForSuccess}).appendTo(group);
+        new Label({text_content: 'Skill', for_id: choice.name,classes: 'px-3'}).appendTo(group);
+        let skills = new Select({classes: 'form-select', id: choice.name}).appendTo(group);
+        for (let skill of STATS.stats) {
+            new Option({text_content: skill.name, value: skill.name}).appendTo(skills);
+        }
+        let choice_body = addChoiceBody(group.element, choice);
+
+        let new_row = new Div({classes: 'py-3'}).appendTo(group.element.parentElement ?? group);
+        let result = new Label({text_content: 'Result ...'}).appendTo(new_row);
+
+
+        async function rollForSuccess(event: MouseEvent) {
+            readStats();
+            let the_skill = STATS.getStatNamed(skills.element.value);
+            if (the_skill) {
+                choice_body.modifier.value = 'All';
+                let dice_value = 0;
+                for (let roll = 0; roll <= 20; roll++) {
+                    dice_value = randomNumber(1, 10);
+                    let dice_text = '';
+                    if (roll > 0) {
+                        dice_text = ` :: D10 Rolls ${dice_value}`;
+                    }
+                    result.element.textContent = `Rolling for ${the_skill.name} - ${the_skill.value}${dice_text}`;
+                    await sleep(100);
+                }
+
+                let result_text = '';
+                let modifier = '';
+                switch (dice_value) {
+                    case 1:
+                        result_text = 'CRITICAL FAIL';
+                        modifier = 'very hard';
+                        break;
+                    case 10:
+                        result_text = 'CRITICAL SUCCESS';
+                        modifier = 'very easy';
+                        break;
+                    case the_skill.value:
+                        result_text = 'TIE!';
+                        modifier = 'All'
+                        break;
+                    default:
+                        if (dice_value < the_skill.value) {
+                            result_text = 'SUCCESS!';
+                            modifier = 'easy';
+                        } else {
+                            result_text = 'FAILURE!';
+                            modifier = 'hard';
+                        }
+                }
+
+                result.element.textContent += ` ... ${result_text} ... sets modifier to ${modifier}`;
+                choice_body.modifier.value = modifier;
+                choice_body.modifier_select(event);
+                choice_body.handle_click(event);
+            }
+        }
+    }
+
+}
+
+type ChoiceBody = {
+    handle_click: (event: MouseEvent) => void,
+    modifier: HTMLSelectElement,
+    modifier_select: (event: MouseEvent) => void,
+}
+
+function addChoiceBody(group: HTMLElement, choice: Choice): ChoiceBody {
     let type_name = choice.name;
 
     // Things that modify the options
@@ -87,7 +163,7 @@ function addChoiceBody(group: HTMLElement, choice: Choice) {
     let result_id = `result-${type_name}`;
     let result_label = new Label({text_content: 'Answer is', for_id: modifier_id, classes: 'px-3'}).appendTo(group);
 
-    let result = new Select({classes: 'form-select w-50', id: result_id}).appendTo(group).element;
+    let result = new Select({classes: 'form-select w-40', id: result_id}).appendTo(group).element;
 
     for (let opt of choice.getChoices('All')) {
         let option = new Option({text_content: opt}).appendTo(result);
@@ -119,7 +195,7 @@ function addChoiceBody(group: HTMLElement, choice: Choice) {
         }
     }
 
-    return handleClick;
+    return {handle_click: handleClick, modifier: modifiers, modifier_select: handleModifierSelect};
 }
 
 type click_handler = (event: MouseEvent) => void;
@@ -143,7 +219,7 @@ export function showGroup(element_name: string, id: string, item: string): void 
             let icon = new Icon({icon_name: choice.icon, classes: 'px-3'}).appendTo(group);
             new Heading({level: 4, text_content: choice.name, style: 'width: 150px'}).appendTo(group);
 
-            let handleClick = addChoiceBody(group.element, choice);
+            let handleClick = addChoiceBody(group.element, choice).handle_click;
             click_handers.push(handleClick);
         }
 
@@ -202,5 +278,16 @@ export function showStats(element_name: string) {
             values[the_stat.name].value = the_stat.value.toString();
         }
     }
+}
 
+function readStats() {
+    for (let the_stat of STATS.stats) {
+        let the_input = document.getElementById(the_stat.name) as HTMLInputElement;
+        if (the_input) {
+            let the_value = Number(the_input.value);
+            if (!isNaN(the_value)) {
+                the_stat.value = the_value;
+            }
+        }
+    }
 }

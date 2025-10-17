@@ -127,4 +127,13 @@ export class Stats {
             stat.value = 0;
         }
     }
+
+    getStatNamed(name: string) {
+        for (let stat of this.stats) {
+            if (stat.name == name) {
+                return stat;
+            }
+        }
+        return null;
+    }
 }
