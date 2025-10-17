@@ -123,13 +123,13 @@ STATS.add(new Stat('Constitution', 0, 'fork-knife'));
 
 export let COMPOSITE_SUCCESS = new Choice(
     'Success', 'Does the action or plan succeed?', 'award', [
-        O('Yes, overwhelmingly so'),
-        O('Yes and a bit more besides'),
-        O('Yes exactly as intended'),
-        O('Yes but with a minor complication'),
-        O('Almost but not quite'),
-        O('No and a minor complication arises'),
-        O('No and a significant complication occurs'),
-        O('No, it is an unmitigated disaster'),
+        O('Yes, overwhelmingly so', ['very easy', 'easy']),
+        O('Yes and a bit more besides', ['very easy', 'easy']),
+        O('Yes exactly as intended', ['very easy', 'easy', 'hard']),
+        O('Yes but with a minor complication', ['very easy', 'easy', 'hard', 'very hard']),
+        O('Almost but not quite', ['very easy', 'easy', 'hard', 'very hard']),
+        O('No and a minor complication arises', ['easy', 'hard', 'very hard']),
+        O('No and a significant complication occurs', ['hard', 'very hard']),
+        O('No, it is an unmitigated disaster', ['hard', 'very hard']),
     ]
 )
