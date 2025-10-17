@@ -2,6 +2,7 @@ import {randomNumber} from "./common";
 import {ALL_CHOICES, GROUPS, STATS} from "./content";
 import {Choice} from "./choices";
 import {Button, Div, Heading, Icon, Label, Option, Select, Input} from "./components";
+import {storeStats} from "./persistence";
 export { ALL_CHOICES};
 
 
@@ -229,6 +230,7 @@ export function showGroup(element_name: string, id: string, item: string): void 
 }
 
 export function showStats(element_name: string) {
+    console.log('Showing stats');
     let root = document.getElementById(element_name);
     let values: Record<string, HTMLInputElement> = {};
 
@@ -245,6 +247,7 @@ export function showStats(element_name: string) {
             let col2 = new Div({classes: 'col-2'}).appendTo(group);
             let label = new Label({text_content: the_stat.name, classes: 'px-3', for_id: the_stat.name});
             let input = new Input({value: the_stat.value.toString(), classes: 'form-control', id: the_stat.name});
+            input.element.addEventListener('change', readStats);
             col1.appendChild(label.element);
             col2.appendChild(input.element);
             //
@@ -258,12 +261,14 @@ export function showStats(element_name: string) {
         let total_points = Number(points.value);
         if (!isNaN(total_points)) {
             STATS.clearAll();
-            for (let i=0; i <= total_points; i++) {
+            for (let i=0; i < total_points; i++) {
                 updateStats();
                 await sleep(500);
                 STATS.addRandomStat();
             }
         }
+        updateStats();
+        storeStats();
     }
 
     function updateStats() {
@@ -283,4 +288,5 @@ function readStats() {
             }
         }
     }
+    storeStats();
 }
