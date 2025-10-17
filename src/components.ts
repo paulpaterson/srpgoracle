@@ -173,6 +173,7 @@ export class Button extends Div {
         this.element.textContent = options.text;
         this.element.type = options.button_type ?? 'submit';
         this.element.className = `btn btn-primary ${options.classes}`;
+        this.element.setAttribute('href', '#');
         if (options.on_click) {
             this.element.addEventListener('click', options.on_click);
         }

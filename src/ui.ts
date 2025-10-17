@@ -1,5 +1,5 @@
 import {randomNumber} from "./common";
-import {ALL_CHOICES, GROUPS, STATS} from "./content";
+import {ALL_CHOICES, DEFAULT_NUMBER_OF_POINTS, DEFAULT_STAT, GROUPS, STATS} from "./content";
 import {Choice} from "./choices";
 import {Button, Div, Heading, Icon, Label, Option, Select, Input} from "./components";
 import {storeStats} from "./persistence";
@@ -240,10 +240,16 @@ export function showStats(element_name: string) {
     let values: Record<string, HTMLInputElement> = {};
 
     if (root) {
-        let card_header = new Heading({level: 4, classes: 'card-header align-items-center', text_content: 'Stats     '}).appendTo(root);
-        let reroll = new Button({button_type: 'submit', text: 'Reroll'}).appendTo(card_header);
-        new Label({text_content: 'with points', for_id: 'points', classes: 'px-3'}).appendTo(card_header);
-        let points = new Input({value: '6', classes: 'col-1'}).appendTo(card_header);
+        let card_header = new Heading({level: 4, classes: 'card-header align-items-center', text_content: ''}).appendTo(root);
+        let input_group = new Div({classes: 'input-group align-items-center py-1'}).appendTo(card_header);
+        let heading = new Heading({text_content: 'Stats', classes: 'px-3'}).appendTo(input_group);
+
+        let button_group = new Div({classes: 'btn-group'}).appendTo(input_group);
+        let clear = new Button({button_type: 'submit', text: 'Clear', classes: 'btn-danger'}).appendTo(button_group);
+        let reroll = new Button({button_type: 'submit', text: 'Reroll'}).appendTo(button_group);
+
+        new Label({text_content: 'with points', for_id: 'points', classes: 'px-3'}).appendTo(input_group);
+        let points = new Input({value: STATS.getRemainingPoints(DEFAULT_NUMBER_OF_POINTS).toString(), classes: 'col-1'}).appendTo(input_group);
         let card_body = new Div({classes: 'card-body container'}).appendTo(root);
 
         for (let the_stat of STATS.stats) {
@@ -252,24 +258,37 @@ export function showStats(element_name: string) {
             let col2 = new Div({classes: 'col-2'}).appendTo(group);
             let label = new Label({text_content: the_stat.name, classes: 'px-3', for_id: the_stat.name});
             let input = new Input({value: the_stat.value.toString(), classes: 'form-control', id: the_stat.name});
-            input.element.addEventListener('change', readStats);
+            input.element.addEventListener('change', () => {
+                readStats();
+                points.element.value = STATS.getRemainingPoints(DEFAULT_NUMBER_OF_POINTS).toString();
+            });
             col1.appendChild(label.element);
             col2.appendChild(input.element);
             //
             values[the_stat.name] = input.element;
         }
         //
-        reroll.element.addEventListener('click', () => rerollStats(points.element));
+        reroll.element.addEventListener('click', () => {
+            reroll.element.blur();
+            rerollStats(points.element)
+        });
+        clear.element.addEventListener('click', () => {
+            clear.element.blur();
+            STATS.clearAll();
+            points.element.value = DEFAULT_NUMBER_OF_POINTS.toString();
+            updateStats();
+            storeStats();
+        })
     }
 
     async function rerollStats(points: HTMLInputElement) {
         let total_points = Number(points.value);
         if (!isNaN(total_points)) {
-            STATS.clearAll();
-            for (let i=0; i < total_points; i++) {
+            for (let i= total_points; i > 0; i--) {
                 updateStats();
                 await sleep(500);
                 STATS.addRandomStat();
+                points.value = (i - 1).toString();
             }
         }
         updateStats();

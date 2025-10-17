@@ -116,7 +116,8 @@ GROUPS.groups['Crowd'] = [
 ]
 
 
-export const DEFAULT_STAT = 4;
+export const DEFAULT_STAT = 0;
+export const DEFAULT_NUMBER_OF_POINTS = 20;
 
 export let STATS = new Stats();
 STATS.add(new Stat('Charisma', DEFAULT_STAT, 'emoji-smile'));

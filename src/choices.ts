@@ -137,4 +137,12 @@ export class Stats {
         }
         return null;
     }
+
+    getRemainingPoints(max_points: number) {
+        let total_points = 0;
+        for (let the_stat of this.stats) {
+            total_points += the_stat.value;
+        }
+        return Math.max(max_points - total_points, 0);
+    }
 }
