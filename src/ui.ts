@@ -51,25 +51,25 @@ export async function repeatedlyCall(min_times: number, max_times: number, eleme
     }
 }
 
-export function showChoices(element_name: string, id: string, type_name: string) {
+export function showChoices(element_name: string, id: string, choice: Choice) {
     let parent_element = document.getElementById(element_name);
     if (parent_element) {
-        let QUESTION = ALL_CHOICES.getChoiceNamed(type_name);
-
         let element = new Div({classes: 'card pb-5'}).appendTo(parent_element);
 
         // The select option
         let name = new Heading({level: 4, classes: 'card-header', text_content: ''}).appendTo(element);
-        let icon = new Icon({icon_name: QUESTION.icon, classes: 'px-3'}).appendTo(name);
-        let main_label = new Label({text_content: QUESTION.description}).appendTo(name);
+        let icon = new Icon({icon_name: choice.icon, classes: 'px-3'}).appendTo(name);
+        let main_label = new Label({text_content: choice.description}).appendTo(name);
         let card = new Div({classes: 'card-body'}).appendTo(element);
         let group = new Div({classes: "input-group align-items-center"}).appendTo(card);
         let button = new Button({text: 'Ask ...'}).appendTo(group);
-        button.element.addEventListener('click', addChoiceBody(group.element, type_name));
+        button.element.addEventListener('click', addChoiceBody(group.element, choice));
     }
 }
 
-function addChoiceBody(group: HTMLElement, type_name: string) {
+function addChoiceBody(group: HTMLElement, choice: Choice) {
+    let type_name = choice.name;
+
     // Things that modify the options
     let modifiers = new Select({classes: 'form-select'}).element;
     let modifier_id = `modifier-${type_name}`;
@@ -78,7 +78,7 @@ function addChoiceBody(group: HTMLElement, type_name: string) {
     let mod_label = new Label({text_content: 'With modifier', for_id: modifier_id, classes: 'px-3'}).appendTo(group);
 
     // The modifiers
-    for (let mod of ALL_CHOICES.getChoiceNamed(type_name).getModifiers()) {
+    for (let mod of choice.getModifiers()) {
         let opt = new Option({text_content: mod, value: mod}).appendTo(modifiers);
     }
     modifiers.addEventListener("click", handleModifierSelect);
@@ -91,8 +91,7 @@ function addChoiceBody(group: HTMLElement, type_name: string) {
     let result = new Select({classes: 'form-select w-50'}).appendTo(group).element;
     result.setAttribute('id', result_id);
 
-    let choices = ALL_CHOICES.getChoiceNamed(type_name);
-    for (let opt of choices.getChoices('All')) {
+    for (let opt of choice.getChoices('All')) {
         let option = new Option({text_content: opt}).appendTo(result);
     }
 
@@ -104,7 +103,7 @@ function addChoiceBody(group: HTMLElement, type_name: string) {
         let select_value_is_disabled = false;
         let first_valid;
         for (let opt of result.options) {
-            opt.disabled = !(choices.getChoices(modifiers.value).includes(opt.value))
+            opt.disabled = !(choice.getChoices(modifiers.value).includes(opt.value))
             if (opt.value == result.value && opt.disabled) {
                 select_value_is_disabled = true;
             }
@@ -146,7 +145,7 @@ export function showGroup(element_name: string, id: string, item: string): void 
             let icon = new Icon({icon_name: choice.icon, classes: 'px-3'}).appendTo(group);
             new Heading({level: 4, text_content: choice.name, style: 'width: 150px'}).appendTo(group);
 
-            let handleClick = addChoiceBody(group.element, choice.name);
+            let handleClick = addChoiceBody(group.element, choice);
             click_handers.push(handleClick);
         }
 

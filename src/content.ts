@@ -121,3 +121,15 @@ STATS.add(new Stat('Strength', 0, 'person-arms-up'));
 STATS.add(new Stat('Intelligence', 0, 'cpu'));
 STATS.add(new Stat('Constitution', 0, 'fork-knife'));
 
+export let COMPOSITE_SUCCESS = new Choice(
+    'Success', 'Does the action or plan succeed?', 'award', [
+        O('Yes, overwhelmingly so'),
+        O('Yes and a bit more besides'),
+        O('Yes exactly as intended'),
+        O('Yes but with a minor complication'),
+        O('Almost but not quite'),
+        O('No and a minor complication arises'),
+        O('No and a significant complication occurs'),
+        O('No, it is an unmitigated disaster'),
+    ]
+)
