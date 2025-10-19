@@ -7,6 +7,7 @@ interface ElementProps {
     classes?: string;
     style?: string;
     id?: string;
+    icon_name?: string;
 }
 
 interface SelectProps extends ElementProps {
@@ -46,26 +47,32 @@ interface InputProps extends ElementProps {
 
 export class Div {
     element: HTMLElement;
+    sub_element: HTMLElement | null = null;
 
     constructor(options: ElementProps) {
         this.element = document.createElement('div');
         this.finaliseObject(options);
     }
 
-    finaliseObject({classes='', style='', id=''}: ElementProps) {
-        this.element.className = classes;
-        this.element.style = style;
-        if (id != '') {
-            this.element.setAttribute('id', id);
+    finaliseObject(options: ElementProps) {
+        this.element.className = options.classes ?? '';
+        this.element.style = options.style ?? '';
+        if (options.id) {
+            this.element.setAttribute('id', options.id);
+        }
+        // Create an icon if there is one
+        if (options.icon_name) {
+            let the_icon = new Icon({icon_name: options.icon_name, classes: 'px-3'});
+            this.sub_element = the_icon.element;
         }
     }
 
     appendTo(element: HTMLElement|Div) {
-        if (element instanceof Div) {
-            element.element.appendChild(this.element);
-        } else {
-            element.appendChild(this.element);
+        let parent = (element instanceof Div) ? element.element : element;
+        if (this.sub_element) {
+            parent.appendChild(this.sub_element);
         }
+        parent.appendChild(this.element);
         return this;
     }
 
@@ -90,7 +97,8 @@ export class Icon extends Div {
         this.finaliseObject(options);
     }
     finaliseObject(options: IconProps) {
-        super.finaliseObject(options);
+        const {icon_name, ...new_options} = options;
+        super.finaliseObject(new_options);
         this.element.className = `bi bi-${options.icon_name} ${options.classes}`;
     }
 }
@@ -149,7 +157,7 @@ export class Label extends Div {
     }
 
     finaliseObject(options: LabelProps) {
-        super.finaliseObject({classes: options.classes, style: options.style});
+        super.finaliseObject(options);
         this.element.textContent = options.text_content;
         if (options.for_id != undefined) {
             this.element.setAttribute('for', options.for_id);

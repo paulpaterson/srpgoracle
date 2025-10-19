@@ -48,8 +48,7 @@ export async function repeatedlyCall(min_times: number, max_times: number, eleme
 function showChoiceHeader(parent_element: HTMLElement, id: string, choice: Choice) {
         let element = new Div({classes: 'card pb-5'}).appendTo(parent_element);
         let name = new Heading({level: 4, classes: 'card-header', text_content: ''}).appendTo(element);
-        let icon = new Icon({icon_name: choice.icon, classes: 'px-3'}).appendTo(name);
-        let main_label = new Label({text_content: choice.description}).appendTo(name);
+        let main_label = new Label({text_content: choice.description, icon_name: choice.icon}).appendTo(name);
         let card = new Div({classes: 'card-body'}).appendTo(element);
         return new Div({classes: "input-group align-items-center"}).appendTo(card);
 }
@@ -215,8 +214,7 @@ export function showGroup(element_name: string, id: string, item: string): void 
         // The individual items
         for (let choice of group) {
             let group = new Div({classes: "input-group align-items-center py-1"}).appendTo(card);
-            let icon = new Icon({icon_name: choice.icon, classes: 'px-3'}).appendTo(group);
-            new Heading({level: 4, text_content: choice.name, style: 'width: 150px'}).appendTo(group);
+            new Heading({level: 4, text_content: choice.name, style: 'width: 150px', icon_name: choice.icon}).appendTo(group);
 
             let handleClick = addChoiceBody(group.element, choice).handle_click;
             click_handers.push(handleClick);
@@ -321,7 +319,6 @@ export function showSelectableDecisions(element_name: string) {
         let card = new Div({classes: 'card pb-5'}).appendTo(element);
         let card_header = new Heading({classes: 'card-header align-items-center', level: 4, text_content: ''}).appendTo(card);
         let group = new Div({classes: 'input-group align-items-center py-1'}).appendTo(card_header);
-        let icon = new Icon({icon_name: 'signpost-split', classes: 'px-3'}).appendTo(group);
-        let heading = new Label({text_content: 'Decisions'}).appendTo(group);
+        let heading = new Label({text_content: 'Decisions', icon_name: 'signpost-split'}).appendTo(group);
     }
 }
