@@ -1,5 +1,5 @@
 import {randomNumber} from "./common";
-import {ALL_CHOICES, DEFAULT_NUMBER_OF_POINTS, DEFAULT_STAT, GROUPS, STATS} from "./content";
+import {ALL_CHOICES, DEFAULT_NUMBER_OF_POINTS, GROUPS} from "./content";
 import {Choice, Stats} from "./choices";
 import {Button, Div, Heading, Icon, Label, Option, Select, Input} from "./components";
 import {storeStats} from "./persistence";
@@ -63,7 +63,7 @@ export function showChoices(element_name: string, id: string, choice: Choice) {
     }
 }
 
-export function showSkillCheckedChoice(element_name: string, id: string, choice: Choice) {
+export function showSkillCheckedChoice(element_name: string, id: string, stats: Stats, choice: Choice) {
     let parent_element = document.getElementById(element_name);
     if (parent_element) {
         let group = showChoiceHeader(parent_element, id, choice);
@@ -71,7 +71,7 @@ export function showSkillCheckedChoice(element_name: string, id: string, choice:
         new Label({text_content: 'Skill', for_id: choice.name,classes: 'px-3'}).appendTo(group);
         let skills = new Select({classes: 'form-select', id: choice.name}).appendTo(group);
         new Option({text_content: 'None', value: 'None'}).appendTo(skills);
-        for (let skill of STATS.stats) {
+        for (let skill of stats.stats) {
             new Option({text_content: skill.name, value: skill.name}).appendTo(skills);
         }
         let choice_body = addChoiceBody(group.element, choice);
@@ -81,8 +81,8 @@ export function showSkillCheckedChoice(element_name: string, id: string, choice:
 
 
         async function rollForSuccess(event: MouseEvent) {
-            readStats();
-            let the_skill = STATS.getStatNamed(skills.element.value);
+            readStats(stats);
+            let the_skill = stats.getStatNamed(skills.element.value);
             if (the_skill) {
                 // A skill was selected
                 choice_body.modifier.value = 'All';
@@ -231,7 +231,7 @@ export function showGroup(element_name: string, id: string, item: string): void 
     }
 }
 
-export function showStats(element_name: string, stats: Stats, show_buttons: boolean) {
+export function showStats(element_name: string, stats: Stats, show_reroll: boolean) {
     console.log('Showing stats');
     let root = document.getElementById(element_name);
     let values: Record<string, HTMLInputElement> = {};
@@ -241,22 +241,22 @@ export function showStats(element_name: string, stats: Stats, show_buttons: bool
         let input_group = new Div({classes: 'input-group align-items-center py-1'}).appendTo(card_header);
         let heading = new Heading({text_content: stats.name, classes: 'px-3', level: 4}).appendTo(input_group);
 
-        let button_group = new Div({classes: 'btn-group'});
+        let button_group = new Div({classes: 'btn-group'}).appendTo(input_group);
         let clear = new Button({
             button_type: 'submit',
             text: 'Clear',
             classes: 'btn-danger'
         }).appendTo(button_group);
-        let reroll = new Button({button_type: 'submit', text: 'Reroll'}).appendTo(button_group);
+        let reroll = new Button({button_type: 'submit', text: 'Reroll'});
 
         let label = new Label({text_content: 'with points', for_id: 'points', classes: 'px-3'});
         let points = new Input({
-            value: STATS.getRemainingPoints(DEFAULT_NUMBER_OF_POINTS).toString(),
+            value: stats.getRemainingPoints(DEFAULT_NUMBER_OF_POINTS).toString(),
             classes: 'col-1'
         });
 
-        if (show_buttons) {
-            button_group.appendTo(input_group);
+        if (show_reroll) {
+            reroll.appendTo(button_group);
             label.appendTo(input_group);
             points.appendTo(input_group);
         }
@@ -270,8 +270,8 @@ export function showStats(element_name: string, stats: Stats, show_buttons: bool
             let label = new Label({text_content: the_stat.name, classes: 'px-3', for_id: the_stat.name, icon_name: the_stat.icon});
             let input = new Input({value: the_stat.value.toString(), classes: 'form-control', id: the_stat.name});
             input.element.addEventListener('change', () => {
-                readStats();
-                points.element.value = STATS.getRemainingPoints(DEFAULT_NUMBER_OF_POINTS).toString();
+                readStats(stats);
+                points.element.value = stats.getRemainingPoints(DEFAULT_NUMBER_OF_POINTS).toString();
             });
 
             col1.appendChild(label);
@@ -286,10 +286,10 @@ export function showStats(element_name: string, stats: Stats, show_buttons: bool
         });
         clear.element.addEventListener('click', () => {
             clear.element.blur();
-            STATS.clearAll();
+            stats.clearAll();
             points.element.value = DEFAULT_NUMBER_OF_POINTS.toString();
             updateStats();
-            storeStats();
+            storeStats(stats);
         })
 
     }
@@ -300,23 +300,23 @@ export function showStats(element_name: string, stats: Stats, show_buttons: bool
             for (let i= total_points; i > 0; i--) {
                 updateStats();
                 await sleep(500);
-                STATS.addRandomStat();
+                stats.addRandomStat();
                 points.value = (i - 1).toString();
             }
         }
         updateStats();
-        storeStats();
+        storeStats(stats);
     }
 
     function updateStats() {
-        for (let the_stat of STATS.stats) {
+        for (let the_stat of stats.stats) {
             values[the_stat.name].value = the_stat.value.toString();
         }
     }
 }
 
-function readStats() {
-    for (let the_stat of STATS.stats) {
+function readStats(stats: Stats) {
+    for (let the_stat of stats.stats) {
         let the_input = document.getElementById(the_stat.name) as HTMLInputElement;
         if (the_input) {
             let the_value = Number(the_input.value);
@@ -325,7 +325,7 @@ function readStats() {
             }
         }
     }
-    storeStats();
+    storeStats(stats);
 }
 
 export function showSelectableDecisions(element_name: string) {

@@ -103,15 +103,21 @@ export class Stat {
     name: string;
     value: number;
     icon: string;
+    initial_value: number;
 
     constructor(name: string, value: number, icon: string) {
         this.name = name;
         this.value = value;
+        this.initial_value = value;
         this.icon = icon;
     }
 
     rerollStats() {
         this.value = randomNumber(10, 1);
+    }
+
+    resetStat() {
+        this.value = this.initial_value;
     }
 }
 
@@ -134,7 +140,7 @@ export class Stats {
 
     clearAll() {
         for (let stat of this.stats) {
-            stat.value = DEFAULT_STAT;
+            stat.resetStat();
         }
     }
 
