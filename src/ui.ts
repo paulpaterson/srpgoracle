@@ -314,3 +314,14 @@ function readStats() {
     }
     storeStats();
 }
+
+export function showSelectableDecisions(element_name: string) {
+    let element = document.getElementById(element_name);
+    if (element) {
+        let card = new Div({classes: 'card pb-5'}).appendTo(element);
+        let card_header = new Heading({classes: 'card-header align-items-center', level: 4, text_content: ''}).appendTo(card);
+        let group = new Div({classes: 'input-group align-items-center py-1'}).appendTo(card_header);
+        let icon = new Icon({icon_name: 'signpost-split', classes: 'px-3'}).appendTo(group);
+        let heading = new Label({text_content: 'Decisions'}).appendTo(group);
+    }
+}

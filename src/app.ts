@@ -1,5 +1,5 @@
 import {getGreeting, randomElement, randomNumber} from "./common";
-import {ALL_CHOICES, showChoices, showGroup, showSkillCheckedChoice, showStats} from "./ui";
+import {ALL_CHOICES, showChoices, showGroup, showSelectableDecisions, showSkillCheckedChoice, showStats} from "./ui";
 import {COMPOSITE_SUCCESS, GROUPS} from "./content";
 import {loadStats} from "./persistence";
 
@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
         loadStats().then(() => {
             showStats('stats');
             showSkillCheckedChoice('choices', 'one', COMPOSITE_SUCCESS);
+            showSelectableDecisions('decisions');
         });
     } else {
         for (let opt of ALL_CHOICES.getTypesOfChoice()) {
