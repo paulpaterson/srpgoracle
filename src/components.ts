@@ -76,8 +76,15 @@ export class Div {
         return this;
     }
 
-    appendChild(element: HTMLElement) {
-        this.element.appendChild(element);
+    appendChild(element: Div|HTMLElement) {
+        if (element instanceof HTMLElement) {
+            this.element.appendChild(element);
+        } else {
+            if (element.sub_element) {
+                this.element.appendChild(element.sub_element);
+            }
+            this.element.appendChild(element.element);
+        }
     }
 }
 

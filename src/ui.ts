@@ -1,6 +1,6 @@
 import {randomNumber} from "./common";
 import {ALL_CHOICES, DEFAULT_NUMBER_OF_POINTS, DEFAULT_STAT, GROUPS, STATS} from "./content";
-import {Choice} from "./choices";
+import {Choice, Stats} from "./choices";
 import {Button, Div, Heading, Icon, Label, Option, Select, Input} from "./components";
 import {storeStats} from "./persistence";
 export { ALL_CHOICES};
@@ -125,20 +125,19 @@ export function showSkillCheckedChoice(element_name: string, id: string, choice:
                 result.element.textContent += ` ... ${result_text} ... sets modifier to ${modifier}`;
                 choice_body.modifier.value = modifier;
                 choice_body.modifier_select(event);
-                choice_body.handle_click(event);
-            } else {
-                // No skill selected so just use the default
-                choice_body.handle_click(event);
             }
+            await choice_body.handle_click(event);
         }
     }
 
 }
 
 type ChoiceBody = {
-    handle_click: (event: MouseEvent) => void,
+    handle_click: (event: MouseEvent) => Promise<void>,
     modifier: HTMLSelectElement,
     modifier_select: (event: MouseEvent) => void,
+    choice_finalized?: (result: string) => void,
+    result: HTMLSelectElement,
 }
 
 function addChoiceBody(group: HTMLElement, choice: Choice): ChoiceBody {
@@ -167,8 +166,8 @@ function addChoiceBody(group: HTMLElement, choice: Choice): ChoiceBody {
         let option = new Option({text_content: opt}).appendTo(result);
     }
 
-    function handleClick(event: MouseEvent): void {
-      repeatedlyCall(20, 30, result);
+    async function handleClick(event: MouseEvent) {
+      return repeatedlyCall(20, 30, result);
     }
 
     function handleModifierSelect(event: MouseEvent): void {
@@ -193,7 +192,7 @@ function addChoiceBody(group: HTMLElement, choice: Choice): ChoiceBody {
         }
     }
 
-    return {handle_click: handleClick, modifier: modifiers, modifier_select: handleModifierSelect};
+    return {handle_click: handleClick, modifier: modifiers, modifier_select: handleModifierSelect, result: result};
 }
 
 type click_handler = (event: MouseEvent) => void;
@@ -232,7 +231,7 @@ export function showGroup(element_name: string, id: string, item: string): void 
     }
 }
 
-export function showStats(element_name: string) {
+export function showStats(element_name: string, stats: Stats, show_buttons: boolean) {
     console.log('Showing stats');
     let root = document.getElementById(element_name);
     let values: Record<string, HTMLInputElement> = {};
@@ -240,28 +239,43 @@ export function showStats(element_name: string) {
     if (root) {
         let card_header = new Heading({level: 4, classes: 'card-header align-items-center', text_content: ''}).appendTo(root);
         let input_group = new Div({classes: 'input-group align-items-center py-1'}).appendTo(card_header);
-        let heading = new Heading({text_content: 'Stats', classes: 'px-3'}).appendTo(input_group);
+        let heading = new Heading({text_content: stats.name, classes: 'px-3', level: 4}).appendTo(input_group);
 
-        let button_group = new Div({classes: 'btn-group'}).appendTo(input_group);
-        let clear = new Button({button_type: 'submit', text: 'Clear', classes: 'btn-danger'}).appendTo(button_group);
+        let button_group = new Div({classes: 'btn-group'});
+        let clear = new Button({
+            button_type: 'submit',
+            text: 'Clear',
+            classes: 'btn-danger'
+        }).appendTo(button_group);
         let reroll = new Button({button_type: 'submit', text: 'Reroll'}).appendTo(button_group);
 
-        new Label({text_content: 'with points', for_id: 'points', classes: 'px-3'}).appendTo(input_group);
-        let points = new Input({value: STATS.getRemainingPoints(DEFAULT_NUMBER_OF_POINTS).toString(), classes: 'col-1'}).appendTo(input_group);
+        let label = new Label({text_content: 'with points', for_id: 'points', classes: 'px-3'});
+        let points = new Input({
+            value: STATS.getRemainingPoints(DEFAULT_NUMBER_OF_POINTS).toString(),
+            classes: 'col-1'
+        });
+
+        if (show_buttons) {
+            button_group.appendTo(input_group);
+            label.appendTo(input_group);
+            points.appendTo(input_group);
+        }
+
         let card_body = new Div({classes: 'card-body container'}).appendTo(root);
 
-        for (let the_stat of STATS.stats) {
+        for (let the_stat of stats.stats) {
             let group = new Div({classes: "input-group align-items-center row py-1"}).appendTo(card_body);
-            let col1 = new Div({classes: 'col-2'}).appendTo(group);
-            let col2 = new Div({classes: 'col-2'}).appendTo(group);
-            let label = new Label({text_content: the_stat.name, classes: 'px-3', for_id: the_stat.name});
+            let col1 = new Div({classes: 'col-5'}).appendTo(group);
+            let col2 = new Div({classes: 'col-5'}).appendTo(group);
+            let label = new Label({text_content: the_stat.name, classes: 'px-3', for_id: the_stat.name, icon_name: the_stat.icon});
             let input = new Input({value: the_stat.value.toString(), classes: 'form-control', id: the_stat.name});
             input.element.addEventListener('change', () => {
                 readStats();
                 points.element.value = STATS.getRemainingPoints(DEFAULT_NUMBER_OF_POINTS).toString();
             });
-            col1.appendChild(label.element);
-            col2.appendChild(input.element);
+
+            col1.appendChild(label);
+            col2.appendChild(input);
             //
             values[the_stat.name] = input.element;
         }
@@ -277,6 +291,7 @@ export function showStats(element_name: string) {
             updateStats();
             storeStats();
         })
+
     }
 
     async function rerollStats(points: HTMLInputElement) {
@@ -319,7 +334,7 @@ export function showSelectableDecisions(element_name: string) {
         let card = new Div({classes: 'card pb-5'}).appendTo(element);
         let card_header = new Heading({classes: 'card-header align-items-center', level: 4, text_content: ''}).appendTo(card);
         let group = new Div({classes: 'input-group align-items-center py-1'}).appendTo(card_header);
-        let heading = new Label({text_content: 'Decisions', icon_name: 'signpost-split', for_id: 'possible_decisions', classes: 'pe-3'}).appendTo(group);
+        let heading = new Label({text_content: 'Subsequent Decisions', icon_name: 'signpost-split', for_id: 'possible_decisions', classes: 'pe-3'}).appendTo(group);
         let possible_decisions = new Select({id: 'possible_decisions', classes: 'form-select w-40'}).appendTo(group);
 
         let the_option = new Option({value: 'Choose', text_content: '-- Choose --'}).appendTo(possible_decisions);
@@ -330,6 +345,7 @@ export function showSelectableDecisions(element_name: string) {
         let body = new Div({classes: 'card-body', id: 'choice_body'}).appendTo(card);
 
         function showNewChoice(this: HTMLSelectElement, ev: Event): void {
+            possible_decisions.element.blur();
             body.element.replaceChildren();
             let the_choice = ALL_CHOICES.getChoiceNamed(possible_decisions.element.value);
             showChoices('choice_body', '', the_choice);

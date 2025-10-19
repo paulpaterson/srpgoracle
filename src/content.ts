@@ -64,13 +64,16 @@ ALL_CHOICES.addChoice(new Choice("How many", "How many of them are there?", '123
 ]));
 
 ALL_CHOICES.addChoice(new Choice("Complication", "What is the nature of the complication that happens?", 'gear', [
-    O("A person", ["concrete"]),
-    O("An animal", ["concrete"]),
-    O("A thing", ["concrete"]),
-    O("An opportunity", ["concept"]),
-    O("An emotion", ["concept"]),
-    O("An event", ["concept"]),
-    O("A disaster", ["concept"]),
+    O("A group of people", ['major']),
+    O("A pack of animals", ['major']),
+    O("A person", ['minor']),
+    O("An animal", ['minor']),
+    O("A thing", ['minor']),
+    O("An opportunity", ['minor']),
+    O("An emotion", ['minor']),
+    O("An event", ['minor']),
+    O("A series of events", ['major']),
+    O("A disaster", ['major']),
 ]));
 
 ALL_CHOICES.addChoice(new Choice("Humor", "What kind of humor is it?", 'emoji-laughing', [
@@ -119,11 +122,11 @@ GROUPS.groups['Crowd'] = [
 export const DEFAULT_STAT = 0;
 export const DEFAULT_NUMBER_OF_POINTS = 20;
 
-export let STATS = new Stats();
+export let STATS = new Stats('Statistics');
 STATS.add(new Stat('Charisma', DEFAULT_STAT, 'emoji-smile'));
 STATS.add(new Stat('Strength', DEFAULT_STAT, 'person-arms-up'));
 STATS.add(new Stat('Intelligence', DEFAULT_STAT, 'cpu'));
-STATS.add(new Stat('Constitution', DEFAULT_STAT, 'fork-knife'));
+STATS.add(new Stat('Constitution', DEFAULT_STAT, 'heart'));
 
 export let COMPOSITE_SUCCESS = new Choice(
     'Success', 'Does the action or plan succeed?', 'award', [
@@ -137,3 +140,9 @@ export let COMPOSITE_SUCCESS = new Choice(
         O('No, it is an unmitigated disaster', ['hard', 'very hard']),
     ]
 )
+
+export let ATTRIBUTES = new Stats('Attributes');
+ATTRIBUTES.add(new Stat('Health', 10, 'heart-pulse'));
+ATTRIBUTES.add(new Stat('Hydration', 10, 'droplet'));
+ATTRIBUTES.add(new Stat('Sustenance', 10, 'tree'));
+ATTRIBUTES.add(new Stat('Radiation', 0, 'radioactive'));

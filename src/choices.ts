@@ -116,7 +116,12 @@ export class Stat {
 }
 
 export class Stats {
+    name: string;
     stats: Stat[] = [];
+
+    constructor(name: string) {
+        this.name = name;
+    }
 
     add(stat: Stat) {
         this.stats.push(stat);
