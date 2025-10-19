@@ -72,6 +72,10 @@ export class Choices {
     getTypesOfChoice(): string[] {
         return Object.keys(this.options);
     }
+
+    getChoices() {
+        return Object.values(this.options);
+    }
 }
 
 export class ChoiceGroup {

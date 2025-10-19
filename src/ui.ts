@@ -319,6 +319,20 @@ export function showSelectableDecisions(element_name: string) {
         let card = new Div({classes: 'card pb-5'}).appendTo(element);
         let card_header = new Heading({classes: 'card-header align-items-center', level: 4, text_content: ''}).appendTo(card);
         let group = new Div({classes: 'input-group align-items-center py-1'}).appendTo(card_header);
-        let heading = new Label({text_content: 'Decisions', icon_name: 'signpost-split'}).appendTo(group);
+        let heading = new Label({text_content: 'Decisions', icon_name: 'signpost-split', for_id: 'possible_decisions', classes: 'pe-3'}).appendTo(group);
+        let possible_decisions = new Select({id: 'possible_decisions', classes: 'form-select w-40'}).appendTo(group);
+
+        let the_option = new Option({value: 'Choose', text_content: '-- Choose --'}).appendTo(possible_decisions);
+        for (let the_type of ALL_CHOICES.getChoices()) {
+            let the_option = new Option({value: the_type.name, text_content: the_type.description}).appendTo(possible_decisions);
+        }
+        possible_decisions.element.addEventListener('change', showNewChoice);
+        let body = new Div({classes: 'card-body', id: 'choice_body'}).appendTo(card);
+
+        function showNewChoice(this: HTMLSelectElement, ev: Event): void {
+            body.element.replaceChildren();
+            let the_choice = ALL_CHOICES.getChoiceNamed(possible_decisions.element.value);
+            showChoices('choice_body', '', the_choice);
+        }
     }
 }
